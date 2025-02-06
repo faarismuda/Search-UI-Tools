@@ -6,6 +6,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "toggleHighlightAds") {
+      toggleHighlightAds();
+      sendResponse({ status: "toggled" });
+  }
+});
+
 function sortProducts(order) {
   const productLists = document.querySelectorAll(".product-list"); // Select all product lists
 
@@ -79,3 +86,19 @@ function injectReason(reason) {
     }
   });
 }
+
+function toggleHighlightAds() {
+  const cards = document.querySelectorAll(".product__card");
+  
+  cards.forEach(card => {
+      const adTag = card.querySelector(".product__card__tag__ad");
+      if (adTag) {
+          if (card.style.border) {
+              card.style.border = ""; // Turn off highlight
+          } else {
+              card.style.border = "2px solid #ff0000"; // Turn on highlight
+          }
+      }
+  });
+}
+
