@@ -39,7 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Ambil state terakhir dari storage
   chrome.storage.sync.get("highlightAdsEnabled", (data) => {
-    toggleSwitch.checked = data.highlightAdsEnabled ?? true; // Default nyala
+    if (data.highlightAdsEnabled === undefined) {
+      chrome.storage.sync.set({ highlightAdsEnabled: true }, () => {
+        toggleSwitch.checked = true;
+      });
+    } else {
+      toggleSwitch.checked = data.highlightAdsEnabled;
+    }
   });
 
   // Toggle perubahan
@@ -53,6 +59,37 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, {
         action: "toggleHighlightAds",
+        enabled: isEnabled,
+      });
+    });
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleSwitch = document.getElementById("toggle-back-to-top");
+
+  // Ambil state terakhir dari storage
+  chrome.storage.sync.get("backToTopEnabled", (data) => {
+    if (data.backToTopEnabled === undefined) {
+      chrome.storage.sync.set({ backToTopEnabled: true }, () => {
+        toggleSwitch.checked = true;
+      });
+    } else {
+      toggleSwitch.checked = data.backToTopEnabled;
+    }
+  });
+
+  // Toggle perubahan
+  toggleSwitch.addEventListener("change", () => {
+    const isEnabled = toggleSwitch.checked;
+
+    // Simpan state ke storage
+    chrome.storage.sync.set({ backToTopEnabled: isEnabled });
+
+    // Kirim pesan ke content.js untuk update tampilan
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: "toggleBackToTop",
         enabled: isEnabled,
       });
     });

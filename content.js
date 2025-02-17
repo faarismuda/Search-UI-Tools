@@ -8,13 +8,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "toggleHighlightAds") {
     highlightAds(request.enabled);
     sendResponse({ status: "updated" });
+  } else if (request.action === "toggleBackToTop") {
+    if (request.enabled) {
+      addBackToTopButton();
+    } else {
+      removeBackToTopButton();
+    }
+    sendResponse({ status: "updated" });
   }
 });
 
-// Ambil state dari storage saat halaman dimuat ulang
 chrome.storage.sync.get("highlightAdsEnabled", (data) => {
-  if (data.highlightAdsEnabled) {
+  if (data.highlightAdsEnabled === undefined) {
+    chrome.storage.sync.set({ highlightAdsEnabled: true }, () => {
+      highlightAds(true);
+    });
+  } else if (data.highlightAdsEnabled) {
     highlightAds(true);
+  }
+});
+
+chrome.storage.sync.get("backToTopEnabled", (data) => {
+  if (data.backToTopEnabled === undefined) {
+    // Jika tidak ada data, anggap default true
+    chrome.storage.sync.set({ backToTopEnabled: true }, () => {
+      addBackToTopButton();
+    });
+  } else if (data.backToTopEnabled) {
+    addBackToTopButton();
   }
 });
 
@@ -146,3 +167,50 @@ const targetNode = document.body; // Bisa diganti dengan elemen spesifik yang me
 const config = { childList: true, subtree: true };
 
 observer.observe(targetNode, config);
+
+// Back to Top
+let backToTopButton = null;
+
+// Fungsi untuk menambahkan tombol Back to Top
+function addBackToTopButton() {
+  if (backToTopButton) return; // Hindari duplikasi
+
+  backToTopButton = document.createElement("button");
+  backToTopButton.id = "backToTopButton";
+  backToTopButton.innerText = "▲ Top";
+  backToTopButton.style.position = "fixed";
+  backToTopButton.style.bottom = "20px";
+  backToTopButton.style.right = "20px";
+  backToTopButton.style.padding = "10px 15px";
+  backToTopButton.style.fontSize = "14px";
+  backToTopButton.style.backgroundColor = "#007bff";
+  backToTopButton.style.color = "white";
+  backToTopButton.style.border = "none";
+  backToTopButton.style.borderRadius = "5px";
+  backToTopButton.style.cursor = "pointer";
+  backToTopButton.style.display = "none";
+  backToTopButton.style.zIndex = "9999";
+  backToTopButton.style.boxShadow = "2px 2px 10px rgba(0, 0, 0, 0.3)";
+
+  document.body.appendChild(backToTopButton);
+
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      backToTopButton.style.display = "block";
+    } else {
+      backToTopButton.style.display = "none";
+    }
+  });
+}
+
+// Fungsi untuk menghapus tombol Back to Top
+function removeBackToTopButton() {
+  if (backToTopButton) {
+    backToTopButton.remove();
+    backToTopButton = null;
+  }
+}

@@ -38,6 +38,7 @@
         .x-container {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 10px;
         }
 
@@ -72,7 +73,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0px;
+            padding: 5px 0px;
         }
 
         .toggle-switch {
@@ -135,6 +136,26 @@
                 <span class="slider"></span>
             </label>
         </div>
+        <div class="toggle-container">
+            <span>Back To Top</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="toggle-back-to-top">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="x-container">
+            <div class="select">
+                <select id="relevancy-select">
+                    <option selected disabled value>Pilih Relevansi</option>
+                    <option value="2">Relevant</option>
+                    <option value="1">Less Relevant</option>
+                    <option value="0">Irrelevant</option>
+                </select>
+            </div>
+            <div class="button">
+                <button id="inject-relevancy">Inject</button>
+            </div>
+        </div>
         <div class="x-container">
             <div class="select">
                 <select id="reason-select">
@@ -162,19 +183,6 @@
             </div>
             <div class="button">
                 <button id="inject-reason">Inject</button>
-            </div>
-        </div>
-        <div class="x-container">
-            <div class="select">
-                <select id="relevancy-select">
-                    <option selected disabled value>Pilih Relevansi</option>
-                    <option value="2">Relevant</option>
-                    <option value="1">Less Relevant</option>
-                    <option value="0">Irrelevant</option>
-                </select>
-            </div>
-            <div class="button">
-                <button id="inject-relevancy">Inject</button>
             </div>
         </div>
     </div>
