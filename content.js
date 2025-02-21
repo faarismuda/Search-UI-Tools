@@ -1,3 +1,10 @@
+// Daftar domain yang diizinkan
+const allowedDomains = ["blibli.com", "searchcenter.gdn-app.com"];
+
+function isDomainAllowed() {
+  return allowedDomains.some(domain => window.location.hostname.includes(domain));
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "sort") {
     sortProducts(request.order);
@@ -9,8 +16,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     highlightAds(request.enabled);
     sendResponse({ status: "updated" });
   } else if (request.action === "toggleBackToTop") {
-    if (request.enabled) {
-      addBackToTopButton();
+    if (isDomainAllowed()) {
+      if (request.enabled) {
+        addBackToTopButton();
+      } else {
+        removeBackToTopButton();
+      }
     } else {
       removeBackToTopButton();
     }
@@ -32,10 +43,14 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
   if (data.backToTopEnabled === undefined) {
     // Jika tidak ada data, anggap default true
     chrome.storage.sync.set({ backToTopEnabled: true }, () => {
-      addBackToTopButton();
+      if (isDomainAllowed()) {
+        addBackToTopButton();
+      }
     });
   } else if (data.backToTopEnabled) {
-    addBackToTopButton();
+    if (isDomainAllowed()) {
+      addBackToTopButton();
+    }
   }
 });
 

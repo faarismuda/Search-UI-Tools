@@ -56,10 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.sync.set({ highlightAdsEnabled: isEnabled });
 
     // Kirim pesan ke content.js untuk update tampilan
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: "toggleHighlightAds",
-        enabled: isEnabled,
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: "toggleHighlightAds",
+          enabled: isEnabled,
+        });
       });
     });
   });
@@ -86,11 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Simpan state ke storage
     chrome.storage.sync.set({ backToTopEnabled: isEnabled });
 
-    // Kirim pesan ke content.js untuk update tampilan
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: "toggleBackToTop",
-        enabled: isEnabled,
+    // Kirim pesan ke semua tab untuk update tampilan
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: "toggleBackToTop",
+          enabled: isEnabled,
+        });
       });
     });
   });
