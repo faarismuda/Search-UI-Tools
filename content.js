@@ -26,6 +26,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       removeBackToTopButton();
     }
     sendResponse({ status: "updated" });
+  } else if (request.action === "inspectProducts") {
+    inspectProducts();
   }
 });
 
