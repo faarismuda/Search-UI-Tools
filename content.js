@@ -95,7 +95,7 @@ function sortProducts(order) {
 function getPrice(productCard) {
   try {
     const priceElement = productCard.querySelector(
-      ".product__body__price__display"
+      ".product__body__price-final"
     );
     const priceText = priceElement.textContent.trim();
     const priceNumber = parseFloat(
