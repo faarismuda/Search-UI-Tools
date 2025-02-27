@@ -167,7 +167,7 @@ function highlightAds(enabled) {
       ".product__card__tag__ad, .blu-product-card__label-right-top-image"
     );
     if (adTag) {
-      card.style.backgroundColor = enabled ? "#ffecec" : ""; // Nyala jika true, mati jika false
+      card.style.backgroundColor = enabled ? "#d2e7ff" : ""; // Nyala jika true, mati jika false
     }
   });
 }
@@ -244,6 +244,7 @@ function showInspectPopup() {
   const modal = document.createElement("div");
   modal.className = "blu-modal b-success b-medium b-active";
   modal.style.cssText = `
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: rgb(255, 255, 255);
     border-bottom-color: rgb(34, 163, 52);
     border-bottom-left-radius: 16px;
@@ -285,7 +286,7 @@ function showInspectPopup() {
     </svg>
     <section class="blu-modal__header-main">
       <section class="blu-modal__header-main--title">
-        <h2>PLP Inspector</h2>
+        <h3>PLP Inspector</h3>
       </section>
     </section>
   `;
