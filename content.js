@@ -310,7 +310,10 @@ function showInspectPopup() {
   footer.innerHTML = `
     <button type="button" class="blu-button b-common b-primary" id="close-inspect-popup" style="
       background-color: rgb(0, 114, 255);
-      border-radius: 8px;
+      border-bottom-left-radius 64px
+      border-bottom-right-radius 64px
+      border-top-left-radius 64px
+      border-top-right-radius 64px
       padding: 10px 20px;
       color: white;
       border: none;
