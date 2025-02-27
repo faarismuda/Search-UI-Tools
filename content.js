@@ -280,7 +280,7 @@ function showInspectPopup() {
     </svg>
     <section class="blu-modal__header-main">
       <section class="blu-modal__header-main--title">
-        <h2>Inspect Product List Page</h2>
+        <h2>PLP Inspector</h2>
       </section>
     </section>
   `;
