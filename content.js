@@ -165,7 +165,7 @@ function highlightAds(enabled) {
       ".product__card__tag__ad, .blu-product-card__label-right-top-image"
     );
     if (adTag) {
-      card.style.backgroundColor = enabled ? "#ffcccc" : ""; // Nyala jika true, mati jika false
+      card.style.backgroundColor = enabled ? "#ffecec" : ""; // Nyala jika true, mati jika false
     }
   });
 }
