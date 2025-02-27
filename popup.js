@@ -36,7 +36,7 @@ document.getElementById("inject-relevancy").addEventListener("click", () => {
 
 document.getElementById("inspect").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { action: "inspectProducts" });
+    chrome.tabs.sendMessage(tabs[0].id, { action: "showInspectPopup" });
   });
 });
 

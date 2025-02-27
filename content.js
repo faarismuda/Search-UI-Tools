@@ -28,6 +28,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ status: "updated" });
   } else if (request.action === "inspectProducts") {
     inspectProducts();
+  } else if (request.action === "showInspectPopup") {
+    showInspectPopup();
   }
 });
 
@@ -230,4 +232,121 @@ function removeBackToTopButton() {
     backToTopButton.remove();
     backToTopButton = null;
   }
+}
+
+function showInspectPopup() {
+  // Create the modal container
+  const modal = document.createElement("div");
+  modal.className = "blu-modal b-success b-medium b-active";
+  modal.style.cssText = `
+    background-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(34, 163, 52);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-style: solid;
+    border-bottom-width: 4px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 6px 0px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    height: 261.781px;
+    line-height: 33.6px;
+    max-height: 576px;
+    max-width: none;
+    opacity: 1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+    width: 600px;
+    z-index: 101;
+  `;
+
+  // Create the modal header
+  const header = document.createElement("div");
+  header.className = "blu-modal__header";
+  header.style.cssText = `
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  `;
+  header.innerHTML = `
+    <svg width="24" height="24" class="blu-icon blu-modal__header-status-icon" aria-hidden="true" type="image/svg+xml" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" tabindex="0" style="margin-right: 10px;">
+      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM17.05 9.11L12.06 16.12C11.88 16.37 11.6 16.52 11.29 16.54H11.24C10.95 16.54 10.67 16.42 10.48 16.19L6.99 12.13C6.82 11.93 6.73 11.67 6.75 11.41C6.77 11.14 6.89 10.9 7.09 10.73C7.51 10.37 8.14 10.42 8.5 10.84L11.16 13.93L15.41 7.96C15.73 7.51 16.35 7.41 16.8 7.73C17.02 7.88 17.16 8.11 17.21 8.38C17.25 8.64 17.19 8.91 17.04 9.12L17.05 9.11Z"></path>
+    </svg>
+    <section class="blu-modal__header-main">
+      <section class="blu-modal__header-main--title">
+        <h2>Inspect Product List Page</h2>
+      </section>
+    </section>
+  `;
+
+  // Create the modal body
+  const body = document.createElement("div");
+  body.className = "blu-modal__body b-overflow-y dev-body b-stop";
+  body.style.cssText = `
+    padding: 20px;
+  `;
+  body.innerHTML = `
+    <div class="blu-modal__body-content">
+      <div>Placeholder content for the inspect popup.</div>
+    </div>
+  `;
+
+  // Create the modal footer with the close button
+  const footer = document.createElement("div");
+  footer.className = "blu-modal__footer";
+  footer.style.cssText = `
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    margin-top: auto;
+  `;
+  footer.innerHTML = `
+    <button type="button" class="blu-button b-common b-primary" id="close-inspect-popup" style="
+      background-color: rgb(0, 114, 255);
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    ">OK</button>
+  `;
+
+  // Append header, body, and footer to the modal
+  modal.appendChild(header);
+  modal.appendChild(body);
+  modal.appendChild(footer);
+
+  // Create the overlay
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+  `;
+
+  // Append modal and overlay to the body
+  document.body.appendChild(overlay);
+  document.body.appendChild(modal);
+
+  // Close modal on button click or outside click
+  document.getElementById("close-inspect-popup").addEventListener("click", () => {
+    document.body.removeChild(modal);
+    document.body.removeChild(overlay);
+  });
+
+  overlay.addEventListener("click", () => {
+    document.body.removeChild(modal);
+    document.body.removeChild(overlay);
+  });
 }
