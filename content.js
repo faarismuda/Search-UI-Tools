@@ -234,11 +234,43 @@ function removeBackToTopButton() {
   }
 }
 
+function calculateAveragePricePerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let totalPrice = 0;
+    let productCount = 0;
+
+    productCards.forEach(card => {
+      const priceElement = card.querySelector('.product__body__price-final');
+      if (priceElement) {
+        const priceText = priceElement.textContent.trim();
+        const priceNumber = parseFloat(priceText.replace(/[^\d.,]/g, '').replace('.', '').replace(',', '.'));
+        if (!isNaN(priceNumber)) {
+          totalPrice += priceNumber;
+          productCount++;
+        }
+      }
+    });
+
+    const averagePrice = productCount > 0 ? (totalPrice / productCount).toFixed(2) : 0;
+    results.push({ swimlaneName, averagePrice });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
     return;
   }
+
+  // Calculate average price per swimlane
+  const averagePrices = calculateAveragePricePerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -258,7 +290,7 @@ function showInspectPopup() {
     display: flex;
     flex-direction: column;
     font-size: 16px;
-    height: 261.781px;
+    height: auto;
     line-height: 33.6px;
     max-height: 576px;
     max-width: none;
@@ -299,7 +331,10 @@ function showInspectPopup() {
   `;
   body.innerHTML = `
     <div class="blu-modal__body-content">
-      <div>Placeholder content for the inspect popup.</div>
+      <div>Average Prices per Swimlane:</div>
+      <ul>
+        ${averagePrices.map(item => `<li>${item.swimlaneName}: ${item.averagePrice}</li>`).join('')}
+      </ul>
     </div>
   `;
 
