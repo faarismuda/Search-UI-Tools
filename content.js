@@ -235,6 +235,11 @@ function removeBackToTopButton() {
 }
 
 function showInspectPopup() {
+  // Check if the modal already exists
+  if (document.querySelector(".blu-modal")) {
+    return;
+  }
+
   // Create the modal container
   const modal = document.createElement("div");
   modal.className = "blu-modal b-success b-medium b-active";
