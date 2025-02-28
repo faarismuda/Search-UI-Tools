@@ -459,7 +459,7 @@ function showInspectPopup() {
     transition: all 0.3s ease;
     width: 80vw;
     z-index: 101;
-    overflow: auto;
+    overflow: hidden; /* Prevent scroll bar on modal */
   `;
 
   // Create the modal header
@@ -490,6 +490,14 @@ function showInspectPopup() {
   body.className = "blu-modal__body b-overflow-y dev-body b-stop";
   body.style.cssText = `
     padding: 0 20px 20px 20px;
+    overflow: hidden; /* Prevent scroll bar on body */
+  `;
+
+  // Create the grid table container
+  const tableContainer = document.createElement("div");
+  tableContainer.style.cssText = `
+    overflow: auto; /* Allow scroll bar on table */
+    max-height: 60vh; /* Adjust as needed */
   `;
 
   // Create the grid table
@@ -529,7 +537,8 @@ function showInspectPopup() {
     table.appendChild(row);
   });
 
-  body.appendChild(table);
+  tableContainer.appendChild(table);
+  body.appendChild(tableContainer);
 
   // Append header and body to the modal
   modal.appendChild(header);
