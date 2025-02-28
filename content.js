@@ -248,7 +248,7 @@ function calculateAveragePricePerSwimlane() {
       const priceElement = card.querySelector('.product__body__price-final');
       if (priceElement) {
         const priceText = priceElement.textContent.trim();
-        const priceNumber = parseFloat(priceText.replace(/[^\d.,]/g, '').replace('.', '').replace(',', '.'));
+        const priceNumber = parseFloat(priceText.replace(/[^\d,]/g, '').replace(',', '.'));
         if (!isNaN(priceNumber)) {
           totalPrice += priceNumber;
           productCount++;
@@ -256,8 +256,30 @@ function calculateAveragePricePerSwimlane() {
       }
     });
 
-    const averagePrice = productCount > 0 ? (totalPrice / productCount).toFixed(2) : 0;
+    const averagePrice = productCount > 0 ? (totalPrice / productCount) : 0;
     results.push({ swimlaneName, averagePrice });
+  });
+
+  return results;
+}
+
+function countPromoProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let promoCount = 0;
+
+    productCards.forEach(card => {
+      const promoElement = card.querySelector('.promo-label__text');
+      if (promoElement) {
+        promoCount++;
+      }
+    });
+
+    results.push({ swimlaneName, promoCount });
   });
 
   return results;
@@ -271,6 +293,9 @@ function showInspectPopup() {
 
   // Calculate average price per swimlane
   const averagePrices = calculateAveragePricePerSwimlane();
+
+  // Count promo products per swimlane
+  const promoCounts = countPromoProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -333,7 +358,11 @@ function showInspectPopup() {
     <div class="blu-modal__body-content">
       <div>Average Prices per Swimlane:</div>
       <ul>
-        ${averagePrices.map(item => `<li>${item.swimlaneName}: ${item.averagePrice}</li>`).join('')}
+        ${averagePrices.map(item => `<li>${item.swimlaneName}: Rp${item.averagePrice.toLocaleString('id-ID')}</li>`).join('')}
+      </ul>
+      <div>Promo Products per Swimlane:</div>
+      <ul>
+        ${promoCounts.map(item => `<li>${item.swimlaneName}: ${item.promoCount} promo products</li>`).join('')}
       </ul>
     </div>
   `;
