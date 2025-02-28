@@ -402,6 +402,38 @@ function countOfficialStoreProductsPerSwimlane() {
   return results;
 }
 
+function countRelevancyProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let relevantCount = 0;
+    let lessRelevantCount = 0;
+    let irrelevantCount = 0;
+
+    productCards.forEach(card => {
+      const relevancyItems = card.querySelectorAll('.product__body__relevancy__item input[type="radio"]');
+      relevancyItems.forEach(item => {
+        if (item.checked) {
+          if (item.value === "2") {
+            relevantCount++;
+          } else if (item.value === "1") {
+            lessRelevantCount++;
+          } else if (item.value === "0") {
+            irrelevantCount++;
+          }
+        }
+      });
+    });
+
+    results.push({ swimlaneName, relevantCount, lessRelevantCount, irrelevantCount });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -428,6 +460,9 @@ function showInspectPopup() {
 
   // Count Official Store products per swimlane
   const officialStoreCounts = countOfficialStoreProductsPerSwimlane();
+
+  // Count relevancy products per swimlane
+  const relevancyCounts = countRelevancyProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -525,7 +560,10 @@ function showInspectPopup() {
     { name: "Rated Products", values: ratedCounts.map(item => item.ratingCount) },
     { name: "Average Rating", values: averageRatings.map(item => item.averageRating.toFixed(2)) },
     { name: "Blibli Provided Products", values: blibliProvidedCounts.map(item => item.blibliProvidedCount) },
-    { name: "Official Store Products", values: officialStoreCounts.map(item => item.officialStoreCount) }
+    { name: "Official Store Products", values: officialStoreCounts.map(item => item.officialStoreCount) },
+    { name: "Relevant Products", values: relevancyCounts.map(item => item.relevantCount) },
+    { name: "Less Relevant Products", values: relevancyCounts.map(item => item.lessRelevantCount) },
+    { name: "Irrelevant Products", values: relevancyCounts.map(item => item.irrelevantCount) }
   ];
 
   metrics.forEach(metric => {
