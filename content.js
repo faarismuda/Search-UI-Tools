@@ -285,6 +285,28 @@ function countPromoProductsPerSwimlane() {
   return results;
 }
 
+function countSoldProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let soldCount = 0;
+
+    productCards.forEach(card => {
+      const soldElement = card.querySelector('.product__body__usp__container__sold__count');
+      if (soldElement) {
+        soldCount++;
+      }
+    });
+
+    results.push({ swimlaneName, soldCount });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -296,6 +318,9 @@ function showInspectPopup() {
 
   // Count promo products per swimlane
   const promoCounts = countPromoProductsPerSwimlane();
+
+  // Count sold products per swimlane
+  const soldCounts = countSoldProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -363,6 +388,10 @@ function showInspectPopup() {
       <div>Promo Products per Swimlane:</div>
       <ul>
         ${promoCounts.map(item => `<li>${item.swimlaneName}: ${item.promoCount} promo products</li>`).join('')}
+      </ul>
+      <div>Sold Products per Swimlane:</div>
+      <ul>
+        ${soldCounts.map(item => `<li>${item.swimlaneName}: ${item.soldCount} sold products</li>`).join('')}
       </ul>
     </div>
   `;
