@@ -486,38 +486,41 @@ function showInspectPopup() {
   body.style.cssText = `
     padding: 20px;
   `;
-  body.innerHTML = `
-    <div class="blu-modal__body-content">
-      <div>Average Prices per Swimlane:</div>
-      <ul>
-        ${averagePrices.map(item => `<li>${item.swimlaneName}: Rp${item.averagePrice.toLocaleString('id-ID')}</li>`).join('')}
-      </ul>
-      <div>Promo Products per Swimlane:</div>
-      <ul>
-        ${promoCounts.map(item => `<li>${item.swimlaneName}: ${item.promoCount} promo products</li>`).join('')}
-      </ul>
-      <div>Sold Products per Swimlane:</div>
-      <ul>
-        ${soldCounts.map(item => `<li>${item.swimlaneName}: ${item.soldCount} sold products</li>`).join('')}
-      </ul>
-      <div>Rated Products per Swimlane:</div>
-      <ul>
-        ${ratedCounts.map(item => `<li>${item.swimlaneName}: ${item.ratingCount} rated products</li>`).join('')}
-      </ul>
-      <div>Average Ratings per Swimlane:</div>
-      <ul>
-        ${averageRatings.map(item => `<li>${item.swimlaneName}: ${item.averageRating.toFixed(2)} average rating</li>`).join('')}
-      </ul>
-      <div>Blibli Provided Products per Swimlane:</div>
-      <ul>
-        ${blibliProvidedCounts.map(item => `<li>${item.swimlaneName}: ${item.blibliProvidedCount} Blibli provided products</li>`).join('')}
-      </ul>
-      <div>Official Store Products per Swimlane:</div>
-      <ul>
-        ${officialStoreCounts.map(item => `<li>${item.swimlaneName}: ${item.officialStoreCount} Official Store products</li>`).join('')}
-      </ul>
-    </div>
+
+  // Create the grid table
+  const table = document.createElement("table");
+  table.style.width = "100%";
+  table.style.borderCollapse = "collapse";
+
+  // Create the header row
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = `
+    <th style="border: 1px solid #ddd; padding: 8px;">Metric</th>
+    ${averagePrices.map(item => `<th style="border: 1px solid #ddd; padding: 8px;">${item.swimlaneName}</th>`).join('')}
   `;
+  table.appendChild(headerRow);
+
+  // Create the rows for each metric
+  const metrics = [
+    { name: "Average Price", values: averagePrices.map(item => `Rp${item.averagePrice.toLocaleString('id-ID')}`) },
+    { name: "Promo Products", values: promoCounts.map(item => item.promoCount) },
+    { name: "Sold Products", values: soldCounts.map(item => item.soldCount) },
+    { name: "Rated Products", values: ratedCounts.map(item => item.ratingCount) },
+    { name: "Average Rating", values: averageRatings.map(item => item.averageRating.toFixed(2)) },
+    { name: "Blibli Provided Products", values: blibliProvidedCounts.map(item => item.blibliProvidedCount) },
+    { name: "Official Store Products", values: officialStoreCounts.map(item => item.officialStoreCount) }
+  ];
+
+  metrics.forEach(metric => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td style="border: 1px solid #ddd; padding: 8px;">${metric.name}</td>
+      ${metric.values.map(value => `<td style="border: 1px solid #ddd; padding: 8px;">${value}</td>`).join('')}
+    `;
+    table.appendChild(row);
+  });
+
+  body.appendChild(table);
 
   // Create the modal footer with the close button
   const footer = document.createElement("div");
