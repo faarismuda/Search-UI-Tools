@@ -38,6 +38,8 @@ An extension to facilitate keyword audits in the Search UI.
 - The extension is designed to work specifically on the domain `searchcenter.gdn-app.com`. Some features will be disabled if the extension is used on other domains.
 - Ensure that you have the necessary permissions enabled for the extension to function correctly.
 - The extension uses Chrome's storage API to save the state of the "Highlight Ads" and "Back To Top" features.
+- The extension has not been tested on macOS.
+- The extension has not been tested on browsers other than Chromium-based browsers.
 
 ## Known Issues
 
