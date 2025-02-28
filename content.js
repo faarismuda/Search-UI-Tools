@@ -329,6 +329,35 @@ function countRatedProductsPerSwimlane() {
   return results;
 }
 
+function calculateAverageRatingPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let totalRating = 0;
+    let ratingCount = 0;
+
+    productCards.forEach(card => {
+      const ratingElement = card.querySelector('.product__body__usp__container__rating__count');
+      if (ratingElement) {
+        const ratingText = ratingElement.textContent.trim().replace(',', '.');
+        const ratingNumber = parseFloat(ratingText.replace(/[^\d.]/g, ''));
+        if (!isNaN(ratingNumber)) {
+          totalRating += ratingNumber;
+          ratingCount++;
+        }
+      }
+    });
+
+    const averageRating = ratingCount > 0 ? (totalRating / ratingCount) : 0;
+    results.push({ swimlaneName, averageRating });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -346,6 +375,9 @@ function showInspectPopup() {
 
   // Count rated products per swimlane
   const ratedCounts = countRatedProductsPerSwimlane();
+
+  // Calculate average rating per swimlane
+  const averageRatings = calculateAverageRatingPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -421,6 +453,10 @@ function showInspectPopup() {
       <div>Rated Products per Swimlane:</div>
       <ul>
         ${ratedCounts.map(item => `<li>${item.swimlaneName}: ${item.ratingCount} rated products</li>`).join('')}
+      </ul>
+      <div>Average Ratings per Swimlane:</div>
+      <ul>
+        ${averageRatings.map(item => `<li>${item.swimlaneName}: ${item.averageRating.toFixed(2)} average rating</li>`).join('')}
       </ul>
     </div>
   `;
