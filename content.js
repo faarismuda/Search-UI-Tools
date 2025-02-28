@@ -528,15 +528,15 @@ function showInspectPopup() {
     font-size: 16px;
     height: auto;
     line-height: 33.6px;
-    max-height: 80vh;
-    max-width: 90vw;
+    max-height: 90vh; /* Adjusted height */
+    max-width: 95vw; /* Adjusted width */
     opacity: 1;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all 0.3s ease;
-    width: 80vw;
+    width: 85vw; /* Adjusted width */
     z-index: 101;
     overflow: hidden; /* Prevent scroll bar on modal */
   `;
@@ -576,7 +576,7 @@ function showInspectPopup() {
   const tableContainer = document.createElement("div");
   tableContainer.style.cssText = `
     overflow: auto; /* Allow scroll bar on table */
-    max-height: 60vh; /* Adjust as needed */
+    max-height: 70vh; /* Adjust as needed */
   `;
 
   // Create the grid table
