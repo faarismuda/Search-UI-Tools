@@ -434,6 +434,47 @@ function countRelevancyProductsPerSwimlane() {
   return results;
 }
 
+function findTopReasonPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const reasonCounts = {};
+
+    productCards.forEach(card => {
+      const relevancyItems = card.querySelectorAll('.product__body__relevancy__item input[type="radio"]');
+      let selectedRelevancy = null;
+
+      relevancyItems.forEach(item => {
+        if (item.checked && (item.value === "0" || item.value === "1")) {
+          selectedRelevancy = item.value;
+        }
+      });
+
+      if (selectedRelevancy !== null) {
+        const reasonSelect = card.querySelector('.single-select-reason');
+        if (reasonSelect) {
+          const selectedReason = reasonSelect.value;
+          if (selectedReason) {
+            if (!reasonCounts[selectedReason]) {
+              reasonCounts[selectedReason] = 0;
+            }
+            reasonCounts[selectedReason]++;
+          }
+        }
+      }
+    });
+
+    const topReasons = Object.keys(reasonCounts).filter(reason => reasonCounts[reason] === Math.max(...Object.values(reasonCounts)));
+    const topReason = topReasons.length > 1 ? "Multiple reasons equally chosen" : (topReasons[0] || "Reason not selected");
+    results.push({ swimlaneName, topReason });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -463,6 +504,9 @@ function showInspectPopup() {
 
   // Count relevancy products per swimlane
   const relevancyCounts = countRelevancyProductsPerSwimlane();
+
+  // Find top reason per swimlane
+  const topReasons = findTopReasonPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -563,7 +607,8 @@ function showInspectPopup() {
     { name: "Official Store Products", values: officialStoreCounts.map(item => item.officialStoreCount) },
     { name: "Relevant Products", values: relevancyCounts.map(item => item.relevantCount) },
     { name: "Less Relevant Products", values: relevancyCounts.map(item => item.lessRelevantCount) },
-    { name: "Irrelevant Products", values: relevancyCounts.map(item => item.irrelevantCount) }
+    { name: "Irrelevant Products", values: relevancyCounts.map(item => item.irrelevantCount) },
+    { name: "Top Products Reason", values: topReasons.map(item => item.topReason) }
   ];
 
   metrics.forEach(metric => {
