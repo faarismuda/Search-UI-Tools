@@ -449,16 +449,17 @@ function showInspectPopup() {
     font-size: 16px;
     height: auto;
     line-height: 33.6px;
-    max-height: 576px;
-    max-width: none;
+    max-height: 80vh;
+    max-width: 90vw;
     opacity: 1;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all 0.3s ease;
-    width: 600px;
+    width: 80vw;
     z-index: 101;
+    overflow: auto;
   `;
 
   // Create the modal header
@@ -496,7 +497,10 @@ function showInspectPopup() {
   const headerRow = document.createElement("tr");
   headerRow.innerHTML = `
     <th style="border: 1px solid #ddd; padding: 8px;">Metric</th>
-    ${averagePrices.map(item => `<th style="border: 1px solid #ddd; padding: 8px;">${item.swimlaneName}</th>`).join('')}
+    ${averagePrices.map(item => {
+      const swimlaneName = item.swimlaneName.split('-').slice(1).join('-');
+      return `<th style="border: 1px solid #ddd; padding: 8px;">${swimlaneName}</th>`;
+    }).join('')}
   `;
   table.appendChild(headerRow);
 
