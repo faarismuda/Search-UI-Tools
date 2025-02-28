@@ -358,6 +358,28 @@ function calculateAverageRatingPerSwimlane() {
   return results;
 }
 
+function countBlibliProvidedProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let blibliProvidedCount = 0;
+
+    productCards.forEach(card => {
+      const blibliProvidedElement = card.querySelector('.product__body__seller-location-name');
+      if (blibliProvidedElement && blibliProvidedElement.textContent.trim() === "Disediakan Blibli") {
+        blibliProvidedCount++;
+      }
+    });
+
+    results.push({ swimlaneName, blibliProvidedCount });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -378,6 +400,9 @@ function showInspectPopup() {
 
   // Calculate average rating per swimlane
   const averageRatings = calculateAverageRatingPerSwimlane();
+
+  // Count Blibli provided products per swimlane
+  const blibliProvidedCounts = countBlibliProvidedProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -457,6 +482,10 @@ function showInspectPopup() {
       <div>Average Ratings per Swimlane:</div>
       <ul>
         ${averageRatings.map(item => `<li>${item.swimlaneName}: ${item.averageRating.toFixed(2)} average rating</li>`).join('')}
+      </ul>
+      <div>Blibli Provided Products per Swimlane:</div>
+      <ul>
+        ${blibliProvidedCounts.map(item => `<li>${item.swimlaneName}: ${item.blibliProvidedCount} Blibli provided products</li>`).join('')}
       </ul>
     </div>
   `;
