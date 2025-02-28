@@ -15,21 +15,23 @@ An extension to facilitate keyword audits in the Search UI.
 
 ### Microsoft Edge
 
-1. **Download the extension files**: Go to the repository and download the extension files to your computer. You can usually do this by clicking on a "Download" button or by cloning the repository.
-2. **Open Microsoft Edge**: Launch the Microsoft Edge browser on your computer.
-3. **Navigate to the Extensions page**: In the address bar, type `edge://extensions/` and press Enter.
-4. **Enable Developer mode**: In the bottom left corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
-5. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you downloaded the extension files and select it.
-6. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
+1. **Download the extension files**: Go to the repository and download the extension files to your computer by clicking on [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip).
+2. **Unzip the downloaded file**: Locate the downloaded ZIP file on your computer (usually in the "Downloads" folder). Right-click on the file and select "Extract All..." to unzip the contents to a folder.
+3. **Open Microsoft Edge**: Launch the Microsoft Edge browser on your computer.
+4. **Navigate to the Extensions page**: In the address bar, type `edge://extensions/` and press Enter.
+5. **Enable Developer mode**: In the bottom left corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
+6. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you unzipped the extension files and select it.
+7. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
 
 ### Google Chrome
 
-1. **Download the extension files**: Go to the repository and download the extension files to your computer. You can usually do this by clicking on a "Download" button or by cloning the repository.
-2. **Open Google Chrome**: Launch the Google Chrome browser on your computer.
-3. **Navigate to the Extensions page**: In the address bar, type `chrome://extensions/` and press Enter.
-4. **Enable Developer mode**: In the top right corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
-5. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you downloaded the extension files and select it.
-6. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
+1. **Download the extension files**: Go to the repository and download the extension files to your computer by clicking on [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip).
+2. **Unzip the downloaded file**: Locate the downloaded ZIP file on your computer (usually in the "Downloads" folder). Right-click on the file and select "Extract All..." to unzip the contents to a folder.
+3. **Open Google Chrome**: Launch the Google Chrome browser on your computer.
+4. **Navigate to the Extensions page**: In the address bar, type `chrome://extensions/` and press Enter.
+5. **Enable Developer mode**: In the top right corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
+6. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you unzipped the extension files and select it.
+7. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
 
 ## Notes
 
