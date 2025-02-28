@@ -468,38 +468,43 @@ function showInspectPopup() {
   header.style.cssText = `
     display: flex;
     align-items: center;
-    padding: 20px;
+    justify-content: space-between;
+    padding: 0 20px;
   `;
   header.innerHTML = `
-    <svg width="24" height="24" class="blu-icon blu-modal__header-status-icon" aria-hidden="true" type="image/svg+xml" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" tabindex="0" style="margin-right: 10px;">
-      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM17.05 9.11L12.06 16.12C11.88 16.37 11.6 16.52 11.29 16.54H11.24C10.95 16.54 10.67 16.42 10.48 16.19L6.99 12.13C6.82 11.93 6.73 11.67 6.75 11.41C6.77 11.14 6.89 10.9 7.09 10.73C7.51 10.37 8.14 10.42 8.5 10.84L11.16 13.93L15.41 7.96C15.73 7.51 16.35 7.41 16.8 7.73C17.02 7.88 17.16 8.11 17.21 8.38C17.25 8.64 17.19 8.91 17.04 9.12L17.05 9.11Z"></path>
-    </svg>
     <section class="blu-modal__header-main">
       <section class="blu-modal__header-main--title">
         <h3>PLP Inspector</h3>
       </section>
     </section>
+    <button type="button" class="blu-modal__close-button" id="close-inspect-popup" style="
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    ">&times;</button>
   `;
 
   // Create the modal body
   const body = document.createElement("div");
   body.className = "blu-modal__body b-overflow-y dev-body b-stop";
   body.style.cssText = `
-    padding: 20px;
+    padding: 0 20px 20px 20px;
   `;
 
   // Create the grid table
   const table = document.createElement("table");
   table.style.width = "100%";
   table.style.borderCollapse = "collapse";
+  table.style.tableLayout = "fixed"; // Ensure equal column width
 
   // Create the header row
   const headerRow = document.createElement("tr");
   headerRow.innerHTML = `
-    <th style="border: 1px solid #ddd; padding: 8px;">Metric</th>
+    <th style="border: 1px solid #ddd; padding: 8px; width: 1%;">Metric</th>
     ${averagePrices.map(item => {
       const swimlaneName = item.swimlaneName.split('-').slice(1).join('-');
-      return `<th style="border: 1px solid #ddd; padding: 8px;">${swimlaneName}</th>`;
+      return `<th style="border: 1px solid #ddd; padding: 8px; width: 1%;">${swimlaneName}</th>`;
     }).join('')}
   `;
   table.appendChild(headerRow);
@@ -508,7 +513,7 @@ function showInspectPopup() {
   const metrics = [
     { name: "Average Price", values: averagePrices.map(item => `Rp${item.averagePrice.toLocaleString('id-ID')}`) },
     { name: "Promo Products", values: promoCounts.map(item => item.promoCount) },
-    { name: "Sold Products", values: soldCounts.map(item => item.soldCount) },
+    { name: "Products with Sold Badge", values: soldCounts.map(item => item.soldCount) },
     { name: "Rated Products", values: ratedCounts.map(item => item.ratingCount) },
     { name: "Average Rating", values: averageRatings.map(item => item.averageRating.toFixed(2)) },
     { name: "Blibli Provided Products", values: blibliProvidedCounts.map(item => item.blibliProvidedCount) },
@@ -518,39 +523,17 @@ function showInspectPopup() {
   metrics.forEach(metric => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td style="border: 1px solid #ddd; padding: 8px;">${metric.name}</td>
-      ${metric.values.map(value => `<td style="border: 1px solid #ddd; padding: 8px;">${value}</td>`).join('')}
+      <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${metric.name}</td>
+      ${metric.values.map(value => `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${value}</td>`).join('')}
     `;
     table.appendChild(row);
   });
 
   body.appendChild(table);
 
-  // Create the modal footer with the close button
-  const footer = document.createElement("div");
-  footer.className = "blu-modal__footer";
-  footer.style.cssText = `
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px;
-    margin-top: auto;
-  `;
-  footer.innerHTML = `
-    <button type="button" class="blu-button b-common b-primary" id="close-inspect-popup" style="
-      background-color: rgb(0, 114, 255);
-      border-radius: 64px;
-      padding: 10px 20px;
-      color: white;
-      border: none;
-      cursor: pointer;
-    ">OK</button>
-  `;
-
-  // Append header, body, and footer to the modal
+  // Append header and body to the modal
   modal.appendChild(header);
   modal.appendChild(body);
-  modal.appendChild(footer);
 
   // Create the overlay
   const overlay = document.createElement("div");
