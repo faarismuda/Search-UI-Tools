@@ -307,6 +307,28 @@ function countSoldProductsPerSwimlane() {
   return results;
 }
 
+function countRatedProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let ratingCount = 0;
+
+    productCards.forEach(card => {
+      const ratingElement = card.querySelector('.product__body__usp__container__rating__count');
+      if (ratingElement) {
+        ratingCount++;
+      }
+    });
+
+    results.push({ swimlaneName, ratingCount });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -321,6 +343,9 @@ function showInspectPopup() {
 
   // Count sold products per swimlane
   const soldCounts = countSoldProductsPerSwimlane();
+
+  // Count rated products per swimlane
+  const ratedCounts = countRatedProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -392,6 +417,10 @@ function showInspectPopup() {
       <div>Sold Products per Swimlane:</div>
       <ul>
         ${soldCounts.map(item => `<li>${item.swimlaneName}: ${item.soldCount} sold products</li>`).join('')}
+      </ul>
+      <div>Rated Products per Swimlane:</div>
+      <ul>
+        ${ratedCounts.map(item => `<li>${item.swimlaneName}: ${item.ratingCount} rated products</li>`).join('')}
       </ul>
     </div>
   `;
