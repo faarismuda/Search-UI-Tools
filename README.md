@@ -3,7 +3,9 @@
 <p align="center">
     <img src="images/icon350.png" width="200" alt="Search UI Tools"/>
 <p>
-An extension to facilitate keyword audits in the Search UI.
+<p align="center">
+    An extension to facilitate keyword audits in the Search UI.
+<p>
 
 ## Features
 
