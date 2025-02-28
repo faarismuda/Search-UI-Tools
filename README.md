@@ -1,5 +1,8 @@
-# Search-UI-Tools
+# Search UI Tools
 
+<p align="center">
+    <img src="images/icon350.png" width="400" alt="Search UI Tools"/>
+<p>
 An extension to facilitate keyword audits in the Search UI.
 
 ## Features
@@ -40,6 +43,7 @@ An extension to facilitate keyword audits in the Search UI.
 - The extension uses Chrome's storage API to save the state of the "Highlight Ads" and "Back To Top" features.
 - The extension has not been tested on macOS.
 - The extension has not been tested on browsers other than Chromium-based browsers.
+- This extension is not intended to speed up the audit process, but rather to make it more accurate.
 
 ## Known Issues
 
