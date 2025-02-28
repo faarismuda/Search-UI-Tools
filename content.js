@@ -380,6 +380,28 @@ function countBlibliProvidedProductsPerSwimlane() {
   return results;
 }
 
+function countOfficialStoreProductsPerSwimlane() {
+  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const results = [];
+
+  swimlanes.forEach(swimlane => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    let officialStoreCount = 0;
+
+    productCards.forEach(card => {
+      const officialStoreElement = card.querySelector('.dev-product-card__icon-usp[src="/static/img/officialStore.2a59b8ca.svg"]');
+      if (officialStoreElement) {
+        officialStoreCount++;
+      }
+    });
+
+    results.push({ swimlaneName, officialStoreCount });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -403,6 +425,9 @@ function showInspectPopup() {
 
   // Count Blibli provided products per swimlane
   const blibliProvidedCounts = countBlibliProvidedProductsPerSwimlane();
+
+  // Count Official Store products per swimlane
+  const officialStoreCounts = countOfficialStoreProductsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -486,6 +511,10 @@ function showInspectPopup() {
       <div>Blibli Provided Products per Swimlane:</div>
       <ul>
         ${blibliProvidedCounts.map(item => `<li>${item.swimlaneName}: ${item.blibliProvidedCount} Blibli provided products</li>`).join('')}
+      </ul>
+      <div>Official Store Products per Swimlane:</div>
+      <ul>
+        ${officialStoreCounts.map(item => `<li>${item.swimlaneName}: ${item.officialStoreCount} Official Store products</li>`).join('')}
       </ul>
     </div>
   `;
