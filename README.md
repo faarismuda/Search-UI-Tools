@@ -15,6 +15,7 @@
 - **Inject Relevancy**: Inject relevancy ratings (Relevant, Less Relevant, Irrelevant) into products.
 - **Inject Reason**: Inject reasons for relevancy ratings into products.
 - **Inspect**: Inspect various metrics such as average price, promo products, sold products, rated products, average rating, Blibli provided products, official store products, relevancy products, and top reasons per swimlane.
+- **Submitted Mark**: Mark swimlanes as submitted once the audit is completed.
 
 ## Installation
 

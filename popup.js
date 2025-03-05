@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "sort-price-desc",
       "inject-reason",
       "inject-relevancy",
-      "inspect"
+      "inspect",
     ];
 
     if (!domain.includes(allowedDomain)) {
-      buttonsToDisable.forEach(buttonId => {
+      buttonsToDisable.forEach((buttonId) => {
         const button = document.getElementById(buttonId);
         if (button) {
           button.disabled = true;
@@ -68,7 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const toggleHighlightAdsSwitch = document.getElementById("toggle-highlight-ads");
+  const toggleHighlightAdsSwitch = document.getElementById(
+    "toggle-highlight-ads"
+  );
 
   // Ambil state terakhir dari storage
   chrome.storage.sync.get("highlightAdsEnabled", (data) => {

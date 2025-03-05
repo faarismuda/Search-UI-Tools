@@ -2,7 +2,9 @@
 const allowedDomains = ["blibli.com", "searchcenter.gdn-app.com"];
 
 function isDomainAllowed() {
-  return allowedDomains.some(domain => window.location.hostname.includes(domain));
+  return allowedDomains.some((domain) =>
+    window.location.hostname.includes(domain)
+  );
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -172,14 +174,49 @@ function highlightAds(enabled) {
   });
 }
 
-// Auto-detect perubahan dalam daftar produk
-const observer = new MutationObserver(() => {
-  chrome.storage.sync.get("highlightAdsEnabled", (data) => {
-    if (data.highlightAdsEnabled) {
-      highlightAds(true);
+// Fungsi untuk menandai swimlane yang telah disubmit
+function markSubmittedSwimlanes() {
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
+
+  swimlanes.forEach((swimlane) => {
+    const parentElement = swimlane.parentElement;
+    const submittedHeading = parentElement.querySelector(
+      ".submit__audit__data__heading"
+    );
+
+    if (submittedHeading && !swimlane.querySelector(".submitted-mark")) {
+      const submittedMark = document.createElement("span");
+      submittedMark.textContent = "✅ SUBMITTED";
+      submittedMark.className = "submitted-mark";
+      submittedMark.style.color = "green";
+      submittedMark.style.fontWeight = "bold";
+      submittedMark.style.marginLeft = "10px";
+
+      swimlane.appendChild(submittedMark);
     }
   });
-});
+}
+
+// Debounce function to limit the rate of function execution
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+// Auto-detect perubahan dalam daftar produk dengan debouncing
+const observer = new MutationObserver(
+  debounce(() => {
+    chrome.storage.sync.get("highlightAdsEnabled", (data) => {
+      if (data.highlightAdsEnabled) {
+        highlightAds(true);
+      }
+    });
+    markSubmittedSwimlanes(); // Panggil fungsi untuk menandai swimlane yang telah disubmit
+  }, 300)
+); // Adjust the debounce delay
 
 // Mulai memantau perubahan pada daftar produk
 const targetNode = document.body; // Bisa diganti dengan elemen spesifik yang menampung daftar produk
@@ -235,20 +272,24 @@ function removeBackToTopButton() {
 }
 
 function calculateAveragePricePerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let totalPrice = 0;
     let productCount = 0;
 
-    productCards.forEach(card => {
-      const priceElement = card.querySelector('.product__body__price-final');
+    productCards.forEach((card) => {
+      const priceElement = card.querySelector(".product__body__price-final");
       if (priceElement) {
         const priceText = priceElement.textContent.trim();
-        const priceNumber = parseFloat(priceText.replace(/[^\d,]/g, '').replace(',', '.'));
+        const priceNumber = parseFloat(
+          priceText.replace(/[^\d,]/g, "").replace(",", ".")
+        );
         if (!isNaN(priceNumber)) {
           totalPrice += priceNumber;
           productCount++;
@@ -256,7 +297,7 @@ function calculateAveragePricePerSwimlane() {
       }
     });
 
-    const averagePrice = productCount > 0 ? (totalPrice / productCount) : 0;
+    const averagePrice = productCount > 0 ? totalPrice / productCount : 0;
     results.push({ swimlaneName, averagePrice });
   });
 
@@ -264,16 +305,18 @@ function calculateAveragePricePerSwimlane() {
 }
 
 function countPromoProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let promoCount = 0;
 
-    productCards.forEach(card => {
-      const promoElement = card.querySelector('.promo-label__text');
+    productCards.forEach((card) => {
+      const promoElement = card.querySelector(".promo-label__text");
       if (promoElement) {
         promoCount++;
       }
@@ -286,16 +329,20 @@ function countPromoProductsPerSwimlane() {
 }
 
 function countSoldProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let soldCount = 0;
 
-    productCards.forEach(card => {
-      const soldElement = card.querySelector('.product__body__usp__container__sold__count');
+    productCards.forEach((card) => {
+      const soldElement = card.querySelector(
+        ".product__body__usp__container__sold__count"
+      );
       if (soldElement) {
         soldCount++;
       }
@@ -308,16 +355,20 @@ function countSoldProductsPerSwimlane() {
 }
 
 function countRatedProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let ratingCount = 0;
 
-    productCards.forEach(card => {
-      const ratingElement = card.querySelector('.product__body__usp__container__rating__count');
+    productCards.forEach((card) => {
+      const ratingElement = card.querySelector(
+        ".product__body__usp__container__rating__count"
+      );
       if (ratingElement) {
         ratingCount++;
       }
@@ -330,20 +381,24 @@ function countRatedProductsPerSwimlane() {
 }
 
 function calculateAverageRatingPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let totalRating = 0;
     let ratingCount = 0;
 
-    productCards.forEach(card => {
-      const ratingElement = card.querySelector('.product__body__usp__container__rating__count');
+    productCards.forEach((card) => {
+      const ratingElement = card.querySelector(
+        ".product__body__usp__container__rating__count"
+      );
       if (ratingElement) {
-        const ratingText = ratingElement.textContent.trim().replace(',', '.');
-        const ratingNumber = parseFloat(ratingText.replace(/[^\d.]/g, ''));
+        const ratingText = ratingElement.textContent.trim().replace(",", ".");
+        const ratingNumber = parseFloat(ratingText.replace(/[^\d.]/g, ""));
         if (!isNaN(ratingNumber)) {
           totalRating += ratingNumber;
           ratingCount++;
@@ -351,7 +406,7 @@ function calculateAverageRatingPerSwimlane() {
       }
     });
 
-    const averageRating = ratingCount > 0 ? (totalRating / ratingCount) : 0;
+    const averageRating = ratingCount > 0 ? totalRating / ratingCount : 0;
     results.push({ swimlaneName, averageRating });
   });
 
@@ -359,17 +414,24 @@ function calculateAverageRatingPerSwimlane() {
 }
 
 function countBlibliProvidedProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let blibliProvidedCount = 0;
 
-    productCards.forEach(card => {
-      const blibliProvidedElement = card.querySelector('.product__body__seller-location-name');
-      if (blibliProvidedElement && blibliProvidedElement.textContent.trim() === "Disediakan Blibli") {
+    productCards.forEach((card) => {
+      const blibliProvidedElement = card.querySelector(
+        ".product__body__seller-location-name"
+      );
+      if (
+        blibliProvidedElement &&
+        blibliProvidedElement.textContent.trim() === "Disediakan Blibli"
+      ) {
         blibliProvidedCount++;
       }
     });
@@ -381,16 +443,20 @@ function countBlibliProvidedProductsPerSwimlane() {
 }
 
 function countOfficialStoreProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let officialStoreCount = 0;
 
-    productCards.forEach(card => {
-      const officialStoreElement = card.querySelector('.dev-product-card__icon-usp[src="/static/img/officialStore.2a59b8ca.svg"]');
+    productCards.forEach((card) => {
+      const officialStoreElement = card.querySelector(
+        '.dev-product-card__icon-usp[src="/static/img/officialStore.2a59b8ca.svg"]'
+      );
       if (officialStoreElement) {
         officialStoreCount++;
       }
@@ -403,19 +469,23 @@ function countOfficialStoreProductsPerSwimlane() {
 }
 
 function countRelevancyProductsPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     let relevantCount = 0;
     let lessRelevantCount = 0;
     let irrelevantCount = 0;
 
-    productCards.forEach(card => {
-      const relevancyItems = card.querySelectorAll('.product__body__relevancy__item input[type="radio"]');
-      relevancyItems.forEach(item => {
+    productCards.forEach((card) => {
+      const relevancyItems = card.querySelectorAll(
+        '.product__body__relevancy__item input[type="radio"]'
+      );
+      relevancyItems.forEach((item) => {
         if (item.checked) {
           if (item.value === "2") {
             relevantCount++;
@@ -428,33 +498,42 @@ function countRelevancyProductsPerSwimlane() {
       });
     });
 
-    results.push({ swimlaneName, relevantCount, lessRelevantCount, irrelevantCount });
+    results.push({
+      swimlaneName,
+      relevantCount,
+      lessRelevantCount,
+      irrelevantCount,
+    });
   });
 
   return results;
 }
 
 function findTopReasonPerSwimlane() {
-  const swimlanes = document.querySelectorAll('.swimlane__heading');
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
   const results = [];
 
-  swimlanes.forEach(swimlane => {
+  swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll('.product__card__link');
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     const reasonCounts = {};
 
-    productCards.forEach(card => {
-      const relevancyItems = card.querySelectorAll('.product__body__relevancy__item input[type="radio"]');
+    productCards.forEach((card) => {
+      const relevancyItems = card.querySelectorAll(
+        '.product__body__relevancy__item input[type="radio"]'
+      );
       let selectedRelevancy = null;
 
-      relevancyItems.forEach(item => {
+      relevancyItems.forEach((item) => {
         if (item.checked && (item.value === "0" || item.value === "1")) {
           selectedRelevancy = item.value;
         }
       });
 
       if (selectedRelevancy !== null) {
-        const reasonSelect = card.querySelector('.single-select-reason');
+        const reasonSelect = card.querySelector(".single-select-reason");
         if (reasonSelect) {
           const selectedReason = reasonSelect.value;
           if (selectedReason) {
@@ -467,8 +546,14 @@ function findTopReasonPerSwimlane() {
       }
     });
 
-    const topReasons = Object.keys(reasonCounts).filter(reason => reasonCounts[reason] === Math.max(...Object.values(reasonCounts)));
-    const topReason = topReasons.length > 1 ? "Multiple reasons equally chosen" : (topReasons[0] || "Reason not selected");
+    const topReasons = Object.keys(reasonCounts).filter(
+      (reason) =>
+        reasonCounts[reason] === Math.max(...Object.values(reasonCounts))
+    );
+    const topReason =
+      topReasons.length > 1
+        ? "Multiple reasons equally chosen"
+        : topReasons[0] || "Reason not selected";
     results.push({ swimlaneName, topReason });
   });
 
@@ -589,33 +674,77 @@ function showInspectPopup() {
   const headerRow = document.createElement("tr");
   headerRow.innerHTML = `
     <th style="border: 1px solid #ddd; padding: 8px; width: 1%;">Metric</th>
-    ${averagePrices.map(item => {
-      const swimlaneName = item.swimlaneName.split('-').slice(1).join('-');
-      return `<th style="border: 1px solid #ddd; padding: 8px; width: 1%;">${swimlaneName}</th>`;
-    }).join('')}
+    ${averagePrices
+      .map((item) => {
+        const swimlaneName = item.swimlaneName.split("-").slice(1).join("-");
+        return `<th style="border: 1px solid #ddd; padding: 8px; width: 1%;">${swimlaneName}</th>`;
+      })
+      .join("")}
   `;
   table.appendChild(headerRow);
 
   // Create the rows for each metric
   const metrics = [
-    { name: "Average Price", values: averagePrices.map(item => `Rp${item.averagePrice.toLocaleString('id-ID')}`) },
-    { name: "Promo Products", values: promoCounts.map(item => item.promoCount) },
-    { name: "Products with Sold Badge", values: soldCounts.map(item => item.soldCount) },
-    { name: "Rated Products", values: ratedCounts.map(item => item.ratingCount) },
-    { name: "Average Rating", values: averageRatings.map(item => item.averageRating.toFixed(2)) },
-    { name: "Blibli Provided Products", values: blibliProvidedCounts.map(item => item.blibliProvidedCount) },
-    { name: "Official Store Products", values: officialStoreCounts.map(item => item.officialStoreCount) },
-    { name: "Relevant Products", values: relevancyCounts.map(item => item.relevantCount) },
-    { name: "Less Relevant Products", values: relevancyCounts.map(item => item.lessRelevantCount) },
-    { name: "Irrelevant Products", values: relevancyCounts.map(item => item.irrelevantCount) },
-    { name: "Top Products Reason", values: topReasons.map(item => item.topReason) }
+    {
+      name: "Average Price",
+      values: averagePrices.map(
+        (item) => `Rp${item.averagePrice.toLocaleString("id-ID")}`
+      ),
+    },
+    {
+      name: "Promo Products",
+      values: promoCounts.map((item) => item.promoCount),
+    },
+    {
+      name: "Products with Sold Badge",
+      values: soldCounts.map((item) => item.soldCount),
+    },
+    {
+      name: "Rated Products",
+      values: ratedCounts.map((item) => item.ratingCount),
+    },
+    {
+      name: "Average Rating",
+      values: averageRatings.map((item) => item.averageRating.toFixed(2)),
+    },
+    {
+      name: "Blibli Provided Products",
+      values: blibliProvidedCounts.map((item) => item.blibliProvidedCount),
+    },
+    {
+      name: "Official Store Products",
+      values: officialStoreCounts.map((item) => item.officialStoreCount),
+    },
+    {
+      name: "Relevant Products",
+      values: relevancyCounts.map((item) => item.relevantCount),
+    },
+    {
+      name: "Less Relevant Products",
+      values: relevancyCounts.map((item) => item.lessRelevantCount),
+    },
+    {
+      name: "Irrelevant Products",
+      values: relevancyCounts.map((item) => item.irrelevantCount),
+    },
+    {
+      name: "Top Products Reason",
+      values: topReasons.map((item) => item.topReason),
+    },
   ];
 
-  metrics.forEach(metric => {
+  metrics.forEach((metric) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${metric.name}</td>
-      ${metric.values.map(value => `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${value}</td>`).join('')}
+      <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${
+        metric.name
+      }</td>
+      ${metric.values
+        .map(
+          (value) =>
+            `<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${value}</td>`
+        )
+        .join("")}
     `;
     table.appendChild(row);
   });
@@ -644,10 +773,12 @@ function showInspectPopup() {
   document.body.appendChild(modal);
 
   // Close modal on button click or outside click
-  document.getElementById("close-inspect-popup").addEventListener("click", () => {
-    document.body.removeChild(modal);
-    document.body.removeChild(overlay);
-  });
+  document
+    .getElementById("close-inspect-popup")
+    .addEventListener("click", () => {
+      document.body.removeChild(modal);
+      document.body.removeChild(overlay);
+    });
 
   overlay.addEventListener("click", () => {
     document.body.removeChild(modal);
