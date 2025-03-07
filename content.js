@@ -186,7 +186,7 @@ function markSubmittedSwimlanes() {
 
     if (submittedHeading && !swimlane.querySelector(".submitted-mark")) {
       const submittedMark = document.createElement("span");
-      submittedMark.textContent = "✅ SUBMITTED";
+      submittedMark.textContent = "SUBMITTED ✔";
       submittedMark.className = "submitted-mark";
       submittedMark.style.color = "green";
       submittedMark.style.fontWeight = "bold";
@@ -676,7 +676,7 @@ function showInspectPopup() {
     <th style="border: 1px solid #ddd; padding: 8px; width: 1%;">Metric</th>
     ${averagePrices
       .map((item) => {
-        const swimlaneName = item.swimlaneName.split("-").slice(1).join("-");
+        const swimlaneName = item.swimlaneName.split("-").slice(-2).join("-");
         return `<th style="border: 1px solid #ddd; padding: 8px; width: 1%;">${swimlaneName}</th>`;
       })
       .join("")}
@@ -700,19 +700,20 @@ function showInspectPopup() {
       values: soldCounts.map((item) => item.soldCount),
     },
     {
-      name: "Rated Products",
-      values: ratedCounts.map((item) => item.ratingCount),
+      name: `<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTAgMEgxNlYxNkgweiIvPgogICAgICAgIDxwYXRoIGZpbGw9IiNGREI4MTMiIGZpbGwtcnVsZT0ibm9uemVybyIgZD0iTTguOTM1IDEuNjQ5bDEuMjYxIDIuNjU5Yy4yMS40Mi42My43IDEuMDUxLjg0bDIuODAzLjQyYy45MS4wNyAxLjI2IDEuMjYuNjMgMS44ODlsLTIuMDMyIDIuMWMtLjM1LjM1LS40Mi44NC0uNDIgMS4yNmwuNDIgMi44NjhjLjIxLjkxLS43NyAxLjYxLTEuNjExIDEuMTlsLTIuNTIzLTEuMzNjLS40Mi0uMjEtLjkxLS4yMS0xLjMzIDBsLTIuNTIzIDEuMzNjLS43Ny40Mi0xLjc1Mi0uMjgtMS42MTItMS4xOWwuNDktMi44NjljLjA3LS40Mi0uMDctLjkxLS40Mi0xLjI2TDEuMzY4IDcuMzg3Yy0uNzAxLS42My0uMzUtMS43NS42My0xLjg5bDIuODAzLS40MmMuMzUtLjE0Ljg0LS40Mi45OC0uOTFMNy4wNDQgMS41MWMuMzUtLjcgMS41NDItLjcgMS44OTIuMTR6Ii8+CiAgICA8L2c+Cjwvc3ZnPgo=" alt="Rated Products (Average Rating)" /> Rated Products (Average Rating)`,
+      values: ratedCounts.map(
+        (item, index) =>
+          `${item.ratingCount} (${averageRatings[index].averageRating.toFixed(
+            2
+          )})`
+      ),
     },
     {
-      name: "Average Rating",
-      values: averageRatings.map((item) => item.averageRating.toFixed(2)),
-    },
-    {
-      name: "Blibli Provided Products",
+      name: `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAU1JREFUOE+lkzEsQ1EUhr/ztAmJgb2SDh0MBtpFB+trBwYxSWyMSPsiUQlRqVSnarCKpYnBaEAXg4hOYrCLGBi7GSQO76Xee021feIu9557zvnOuf+9V/jnkKD5ek8BZRNISoL6T14ggKZScxSvSkAMoSRxNgIB1DTVDazVROtEpO92CcPYJpF0inftQE1zDxhDNYJh7EpxJwf6hsgj8Umni84AS93qHXUqi7QCvKQcYJ+5+2gD5DVEg0Eq0qAJO12A+arHuVmGqaOm7QCyGgPO2JcJsnoNDDluYdyeCmnYuvQALbYDWNEIYQ4pyyyWnrgAmAZC54swc+wB7lYheeDvwF5n1K4adcMq8oCl79869Nt7r3moP0N6FAbWfbK4GviCHfcHI4R56aUhbSL6M/58jRmNYvDUs6o/4JPh3x9SVtMIFz1hylqgz9QN9AXjO1tzC3F/xwAAAABJRU5ErkJggg==" alt="Blibli Provided Products" /> Blibli Provided Products`,
       values: blibliProvidedCounts.map((item) => item.blibliProvidedCount),
     },
     {
-      name: "Official Store Products",
+      name: `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAKcSURBVHgBdZNNSFRRFMf/Z94wvhkZfUGDhUrTQumDQgMliGjsYxEEWroL0qFVi7CB2hSRQRZkkEJCO3WR0CIVXLgJRmkRRJltlCBqZlLJb9N58/XevNO9b4ZJSy8c7r2cc373fNxD2GUl36kBBzlaSV6IJlyn9P6d7Og/x7Dqh0J9BApsMySMWKYVcjekIjsCOKxpaUf6AQPtzKAka4hkjts6nzMqJJazA3enLe7ZkwfZgLUx1V+kUlhcDsQtje59e4mhuUtY3swZlHiAoP8VQgcfw6dEJSVCzAH3uVTUBuhv3cOC3Lhs+an54yg+LVTab23NUJ5OlP3EWN1peBzrLKKc8J5PNTik0jTRlDVBndO3MTlfBmIDsEwhBkiIX8ti6LqCrKMcnTN3cqos1UhfG2BlGbpZyoOxFjCb0FyCZuWEBaDvqgtNx5yoKbfQ/70Zm4YmIVoBkBUPTq0cIT2ZRlu9E6tdGlrrFaHIoONiEQJVTvSEkxh4n8BGyo0fG+WCbckc4bRTyDBUc5kFlsa/JhBdcaPvmhetJ4VztQtTswZCr1dFVciuxeJvN6qcRFsiIOx3zKLUsYrIUgoNz34hsmLaznK/3LuQC1Okw5k4DqvTMI1ccfMAa60YCVzwjtqGkUUB6ZrDyKRu7/IunaWuxfcGHtZFdswFQCZDX4wM6G7lU1TwjOighCRw5UUMUbEj35UKTOPmvl77dTONiQLA0ClopBDxWKJQ1TfQ5BkU1LjtxLJn6TjOqqMYPtqGMmWJpW06ScFtX/nzE9XvVPiWOLaLXmIu5cN8cq8d5qGSGHkVPf+huNtwFT+sDa2vbwMUQB1ymKzn4tgoZ+LvMPE4skqwtmOXYfp3fbivtokczsgcma2Bukfm+E52fwDeSEWNax2kwAAAAABJRU5ErkJggg==" alt="Official Store Products" /> Official Store Products`,
       values: officialStoreCounts.map((item) => item.officialStoreCount),
     },
     {
