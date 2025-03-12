@@ -184,15 +184,26 @@ function markSubmittedSwimlanes() {
       ".submit__audit__data__heading"
     );
 
-    if (submittedHeading && !swimlane.querySelector(".submitted-mark")) {
-      const submittedMark = document.createElement("span");
-      submittedMark.textContent = "SUBMITTED ✔";
-      submittedMark.className = "submitted-mark";
-      submittedMark.style.color = "green";
-      submittedMark.style.fontWeight = "bold";
-      submittedMark.style.marginLeft = "10px";
+    const submittedMark = swimlane.querySelector(".submitted-mark");
 
-      swimlane.appendChild(submittedMark);
+    if (
+      submittedHeading &&
+      submittedHeading.textContent.includes("Data submitted successfully")
+    ) {
+      if (!submittedMark) {
+        const newSubmittedMark = document.createElement("span");
+        newSubmittedMark.textContent = "SUBMITTED ✔";
+        newSubmittedMark.className = "submitted-mark";
+        newSubmittedMark.style.color = "green";
+        newSubmittedMark.style.fontWeight = "bold";
+        newSubmittedMark.style.marginLeft = "10px";
+
+        swimlane.appendChild(newSubmittedMark);
+      }
+    } else {
+      if (submittedMark) {
+        swimlane.removeChild(submittedMark);
+      }
     }
   });
 }
