@@ -61,14 +61,14 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
 });
 
 function sortProducts(order) {
-  const productLists = document.querySelectorAll(".product-list"); // Select all product lists
+  const swimlanes = document.querySelectorAll(".swimlane__heading"); // Select all swimlanes
 
-  productLists.forEach((productList) => {
-    const productGrids = productList.querySelectorAll(".product-grid");
+  swimlanes.forEach((swimlane) => {
+    const productGrid = swimlane.parentElement.querySelector(".product-grid"); // Select the product grid within the swimlane
 
-    productGrids.forEach((grid) => {
+    if (productGrid) {
       const productCards = Array.from(
-        grid.querySelectorAll(".product__card__link")
+        productGrid.querySelectorAll(".product__card__link")
       );
 
       productCards.sort((a, b) => {
@@ -83,18 +83,15 @@ function sortProducts(order) {
       });
 
       // Clear existing order
-      while (grid.firstChild) {
-        grid.removeChild(grid.firstChild);
+      while (productGrid.firstChild) {
+        productGrid.removeChild(productGrid.firstChild);
       }
 
       // Append sorted order
       productCards.forEach((card) => {
-        const parent = card.parentNode;
-        if (parent) {
-          grid.appendChild(parent);
-        }
+        productGrid.appendChild(card);
       });
-    });
+    }
   });
 }
 
@@ -106,8 +103,8 @@ function getPrice(productCard) {
     const priceText = priceElement.textContent.trim();
     const priceNumber = parseFloat(
       priceText
-        .replace(/[^\d.,]/g, "")
-        .replace(".", "")
+        .replace(/[^\d,]/g, "")
+        .replace(/\./g, "")
         .replace(",", ".")
     );
     return priceNumber;
