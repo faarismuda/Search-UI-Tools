@@ -50,7 +50,7 @@
 
 ## Known Issues
 
-- **Sort Price Functionality**: Occasionally, the sort price functionality does not work as expected. Sometimes, products are sorted into separate groups, resulting in category A being sorted and then category B being sorted, rather than a fully ordered list. The cause of this issue is currently unknown, and a solution has not yet been identified.
+- ~~**Sort Price Functionality**: Occasionally, the sort price functionality does not work as expected. Sometimes, products are sorted into separate groups, resulting in category A being sorted and then category B being sorted, rather than a fully ordered list. The cause of this issue is currently unknown, and a solution has not yet been identified.~~ FIXED 13/03/25 :D
 
 ## Permissions
 
