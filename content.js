@@ -192,7 +192,7 @@ function markSubmittedSwimlanes() {
     ) {
       if (!submittedMark) {
         const newSubmittedMark = document.createElement("span");
-        newSubmittedMark.textContent = "SUBMITTED ✔";
+        newSubmittedMark.textContent = " SUBMITTED ✔";
         newSubmittedMark.className = "submitted-mark";
         newSubmittedMark.style.color = "green";
         newSubmittedMark.style.fontWeight = "bold";
