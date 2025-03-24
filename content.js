@@ -786,8 +786,9 @@ function showInspectPopup() {
     },
   ];
 
-  metrics.forEach((metric) => {
+  metrics.forEach((metric, index) => {
     const row = document.createElement("tr");
+    row.className = index % 2 === 0 ? "even-row" : "odd-row";
     row.innerHTML = `
       <td style="border: 1px solid #ddd; padding: 8px; text-align: left;">${
         metric.name
@@ -837,4 +838,16 @@ function showInspectPopup() {
     document.body.removeChild(modal);
     document.body.removeChild(overlay);
   });
+
+  // Add CSS for alternating row colors
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .even-row {
+      background-color: #f9f9f9;
+    }
+    .odd-row {
+      background-color: #ffffff;
+    }
+  `;
+  document.head.appendChild(style);
 }
