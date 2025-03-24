@@ -568,6 +568,43 @@ function findTopReasonPerSwimlane() {
   return results;
 }
 
+function countTopLocationsPerSwimlane() {
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
+  const results = [];
+
+  swimlanes.forEach((swimlane) => {
+    const swimlaneName = swimlane.textContent.trim();
+    const productCards = swimlane.parentElement.querySelectorAll(".product__card__link");
+    const locationCounts = {};
+
+    productCards.forEach((card) => {
+      const locationElements = card.querySelectorAll(".product__body__seller-location-name");
+      locationElements.forEach((locationElement) => {
+        let locationText = locationElement.textContent.trim();
+        if (locationText.includes("Kota") || locationText.includes("Kab.")) {
+          // Remove "& kota lainnya" from the location text
+          if (locationText.includes("& kota lainnya")) {
+            locationText = locationText.split("& kota lainnya")[0].trim();
+          }
+          if (!locationCounts[locationText]) {
+            locationCounts[locationText] = 0;
+          }
+          locationCounts[locationText]++;
+        }
+      });
+    });
+
+    const sortedLocations = Object.entries(locationCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([location, count]) => `${location} (${count})`);
+
+    results.push({ swimlaneName, topLocations: sortedLocations.join(", ") });
+  });
+
+  return results;
+}
+
 function showInspectPopup() {
   // Check if the modal already exists
   if (document.querySelector(".blu-modal")) {
@@ -600,6 +637,9 @@ function showInspectPopup() {
 
   // Find top reason per swimlane
   const topReasons = findTopReasonPerSwimlane();
+
+  // Count top locations per swimlane
+  const topLocations = countTopLocationsPerSwimlane();
 
   // Create the modal container
   const modal = document.createElement("div");
@@ -739,6 +779,10 @@ function showInspectPopup() {
     {
       name: "Top Products Reason",
       values: topReasons.map((item) => item.topReason),
+    },
+    {
+      name: "Top Locations",
+      values: topLocations.map((item) => item.topLocations),
     },
   ];
 
