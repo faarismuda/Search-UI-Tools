@@ -159,11 +159,11 @@ function injectRelevancy(relevancy) {
 
 // Fungsi untuk menyalakan/mematikan highlight
 function highlightAds(enabled) {
-  const cards = document.querySelectorAll(".product__card, .blu-product-card");
+  const cards = document.querySelectorAll(".product__card, .els-product");
 
   cards.forEach((card) => {
     const adTag = card.querySelector(
-      ".product__card__tag__ad, .blu-product-card__label-right-top-image"
+      ".product__card__tag__ad, .b-ads"
     );
     if (adTag) {
       card.style.backgroundColor = enabled ? "#d2e7ff" : ""; // Nyala jika true, mati jika false
