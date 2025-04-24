@@ -337,19 +337,6 @@ function addBackToTopButton() {
   backToTopButton = document.createElement("button");
   backToTopButton.id = "backToTopButton";
   backToTopButton.innerText = "▲ Top";
-  backToTopButton.style.position = "fixed";
-  backToTopButton.style.bottom = "20px";
-  backToTopButton.style.right = "20px";
-  backToTopButton.style.padding = "10px 15px";
-  backToTopButton.style.fontSize = "14px";
-  backToTopButton.style.backgroundColor = "#007bff";
-  backToTopButton.style.color = "white";
-  backToTopButton.style.border = "none";
-  backToTopButton.style.borderRadius = "5px";
-  backToTopButton.style.cursor = "pointer";
-  backToTopButton.style.display = "none";
-  backToTopButton.style.zIndex = "9999";
-  backToTopButton.style.boxShadow = "2px 2px 10px rgba(0, 0, 0, 0.3)";
 
   document.body.appendChild(backToTopButton);
 

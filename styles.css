@@ -1,3 +1,23 @@
+#backToTopButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+    z-index: 9999;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#backToTopButton:hover {
+    background-color: #0056b3; /* Tambahkan efek hover jika diperlukan */
+}
+
 .submitted-mark {
     color: green;
     font-weight: bold;
@@ -9,7 +29,7 @@
     width: 100%;
     margin: 15px 0;
     padding: 8px 16px;
-    background-color: #0095da;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -19,7 +39,7 @@
 }
 
 .blibli-copy-btn:hover {
-    background-color: #0077ae;
+    background-color: #0056b3;
 }
 
 .blibli-toast {
