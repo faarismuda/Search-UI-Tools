@@ -60,6 +60,101 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
   }
 });
 
+// Fungsi untuk menginisialisasi fitur Copy Categories
+function initializeCopyCategories() {
+  // Add button to page when loaded
+  function init() {
+      if (document.querySelector('.nested-category-filter')) {
+          if (!document.getElementById('blibli-copy-categories')) {
+              const copyButton = document.createElement('button');
+              copyButton.id = 'blibli-copy-categories';
+              copyButton.className = 'blibli-copy-btn';
+              copyButton.textContent = 'Copy Categories';
+              copyButton.addEventListener('click', copySelectedCategories);
+
+              const categoryFilter = document.querySelector('.nested-category-filter');
+              if (categoryFilter && categoryFilter.parentNode) {
+                  categoryFilter.parentNode.insertBefore(copyButton, categoryFilter.nextSibling);
+              }
+          }
+      }
+  }
+
+  function copySelectedCategories() {
+      const categoryPaths = [];
+      const checkedBoxes = document.querySelectorAll('.blu-checkbox input[type="checkbox"][value="true"]');
+      checkedBoxes.forEach(checkbox => {
+          const path = getCategoryPath(checkbox);
+          if (path) {
+              categoryPaths.push(path);
+          }
+      });
+      const result = categoryPaths.join('; ');
+      navigator.clipboard.writeText(result).then(() => {
+          showToast('Categories copied to clipboard!');
+      }).catch(err => {
+          console.error('Failed to copy: ', err);
+          showToast('Failed to copy categories', true);
+      });
+  }
+
+  function getCategoryPath(checkbox) {
+      const categories = [];
+      let currentLabel = checkbox.closest('.blu-checkbox').querySelector('.blu-checkbox__content');
+      if (!currentLabel) return null;
+      categories.unshift(currentLabel.textContent.trim());
+      let currentElement = checkbox.closest('.nested-category-filter__row');
+      let parentFilter = currentElement.closest('.nested-category-filter');
+      while (parentFilter) {
+          const parentElement = parentFilter.parentElement;
+          if (parentElement) {
+              const parentRow = parentElement.querySelector(':scope > .nested-category-filter__row');
+              if (parentRow) {
+                  const parentLabel = parentRow.querySelector('.blu-checkbox__content');
+                  if (parentLabel) {
+                      categories.unshift(parentLabel.textContent.trim());
+                  }
+              }
+              parentFilter = parentElement.closest('.nested-category-filter');
+          } else {
+              break;
+          }
+      }
+      return categories.join(' > ');
+  }
+
+  function showToast(message, isError = false) {
+      const toast = document.createElement('div');
+      toast.className = `blibli-toast ${isError ? 'blibli-toast-error' : ''}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+          toast.classList.add('show');
+      }, 10);
+      setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => {
+              document.body.removeChild(toast);
+          }, 300);
+      }, 3000);
+  }
+
+  if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+  } else {
+      init();
+  }
+
+  const observer = new MutationObserver(function(mutations) {
+      if (document.querySelector('.nested-category-filter') && 
+          !document.getElementById('blibli-copy-categories')) {
+          init();
+      }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 function sortProducts(order) {
   const swimlanes = document.querySelectorAll(".swimlane__heading"); // Select all swimlanes
 
@@ -191,12 +286,9 @@ function markSubmittedSwimlanes() {
         const newSubmittedMark = document.createElement("span");
         newSubmittedMark.textContent = " SUBMITTED ✔";
         newSubmittedMark.className = "submitted-mark";
-        newSubmittedMark.style.color = "green";
-        newSubmittedMark.style.fontWeight = "bold";
-        newSubmittedMark.style.marginLeft = "10px";
-
+    
         swimlane.appendChild(newSubmittedMark);
-      }
+    }
     } else {
       if (submittedMark) {
         swimlane.removeChild(submittedMark);
@@ -213,6 +305,9 @@ function debounce(func, wait) {
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
 }
+
+// Panggil fungsi untuk menginisialisasi fitur Copy Categories
+initializeCopyCategories();
 
 // Auto-detect perubahan dalam daftar produk dengan debouncing
 const observer = new MutationObserver(

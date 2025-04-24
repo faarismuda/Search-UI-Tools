@@ -1,0 +1,46 @@
+.submitted-mark {
+    color: green;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.blibli-copy-btn {
+    display: block;
+    width: 100%;
+    margin: 15px 0;
+    padding: 8px 16px;
+    background-color: #0095da;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.blibli-copy-btn:hover {
+    background-color: #0077ae;
+}
+
+.blibli-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    z-index: 10000;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.blibli-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.blibli-toast-error {
+    background-color: #e74c3c;
+}
