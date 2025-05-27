@@ -89,7 +89,7 @@ function initializeCopyCategories() {
               categoryPaths.push(path);
           }
       });
-      const result = categoryPaths.join('; ');
+      const result = categoryPaths.join(';\n');
       navigator.clipboard.writeText(result).then(() => {
           showToast('Categories copied to clipboard!');
       }).catch(err => {
