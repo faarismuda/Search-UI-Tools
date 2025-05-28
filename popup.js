@@ -135,45 +135,84 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add update checker function
   async function checkForUpdates() {
     const GITHUB_REPO = "faarismuda/Search-UI-Tools";
-    const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/manifest.json`;
+    const MANIFEST_FILE_PATH = "manifest.json"; // Path to your manifest file in the repo
+    const GITHUB_RAW_MANIFEST_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/${MANIFEST_FILE_PATH}`; // Assuming 'main' branch
 
     try {
-      // Get current version from local manifest
+      // 1. Get local extension version from its manifest
       const localManifest = chrome.runtime.getManifest();
-      const currentVersion = localManifest.version;
+      const localVersion = localManifest.version;
+      console.log("Local Version:", localVersion);
 
-      // Get latest version from GitHub
-      const response = await fetch(GITHUB_RAW_URL);
+      // 2. Fetch remote manifest.json from GitHub
+      const response = await fetch(GITHUB_RAW_MANIFEST_URL);
       if (!response.ok) {
-        console.error("Failed to fetch manifest:", response.status);
+        console.error(
+          "Failed to fetch remote manifest:",
+          response.status,
+          response.statusText
+        );
         return;
       }
-
       const remoteManifest = await response.json();
-      const latestVersion = remoteManifest.version;
+      const remoteVersion = remoteManifest.version;
+      console.log("Remote Version:", remoteVersion);
 
-      // Compare versions
-      if (currentVersion !== latestVersion) {
-        // Show update notification
+      // 3. Compare versions
+      // This simple comparison works for semantic versioning (e.g., 1.0.0, 1.0.1, 2.0.0)
+      if (compareVersions(remoteVersion, localVersion) > 0) {
+        // Show update notification with manual update instructions
         const container = document.querySelector(".container");
-        const updateNotice = document.createElement("div");
-        updateNotice.style.backgroundColor = "#FFA000";
-        updateNotice.style.color = "white";
-        updateNotice.style.padding = "10px";
-        updateNotice.style.borderRadius = "8px";
-        updateNotice.style.marginBottom = "10px";
-        updateNotice.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span>New version ${latestVersion} available!</span>
-          <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
-             style="color: white; text-decoration: underline;">Download</a>
-        </div>
-        <small>Current version: ${currentVersion}</small>`;
-        container.insertBefore(updateNotice, container.firstChild);
+        if (container) {
+          // Ensure container exists before inserting
+          const updateNotice = document.createElement("div");
+          updateNotice.style.backgroundColor = "#2196F3"; // A distinct color for version-based update
+          updateNotice.style.color = "white";
+          updateNotice.style.padding = "10px";
+          updateNotice.style.borderRadius = "8px";
+          updateNotice.style.marginBottom = "10px";
+          updateNotice.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>New version (${remoteVersion}) available!</span>
+                <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
+                   style="color: white; text-decoration: underline;">Download v${remoteVersion}</a>
+              </div>
+              <small>Please download the new version and manually update your extension.</small>`;
+          container.insertBefore(updateNotice, container.firstChild);
+        } else {
+          console.warn("Container element not found for update notification.");
+        }
+
+        // Optional: Save the notified version to storage to prevent repeated notifications for the same version
+        // This is useful if you want to notify only once per new version
+        chrome.storage.sync.set({ lastNotifiedVersion: remoteVersion });
+      } else {
+        console.log("Your extension is up to date or no newer version found.");
+        // Optional: If you want to hide the notification after user updates,
+        // you could check if lastNotifiedVersion is same as current localVersion and hide if it was previously shown
       }
     } catch (error) {
       console.error("Failed to check for updates:", error);
     }
+  }
+
+  // Helper function to compare semantic versions (e.g., "1.0.0" vs "1.0.1")
+  // Returns:
+  //   1 if v1 > v2
+  //  -1 if v1 < v2
+  //   0 if v1 == v2
+  function compareVersions(v1, v2) {
+    const parts1 = v1.split(".").map(Number);
+    const parts2 = v2.split(".").map(Number);
+
+    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+      const p1 = parts1[i] || 0; // Use 0 for missing parts (e.g., 1.0 vs 1.0.0)
+      const p2 = parts2[i] || 0;
+
+      if (p1 > p2) return 1;
+      if (p2 > p1) return -1;
+    }
+    return 0; // Versions are equal
   }
 
   // Check for updates when popup opens
