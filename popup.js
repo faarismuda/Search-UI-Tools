@@ -173,23 +173,19 @@ document.addEventListener("DOMContentLoaded", () => {
           updateNotice.style.marginBottom = "10px";
           updateNotice.innerHTML = `
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>New version (${remoteVersion}) available!</span>
+                <span>New version available!</span>
                 <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
                    style="color: white; text-decoration: underline;">Download v${remoteVersion}</a>
               </div>
-              <small>Please download the new version and manually update your extension.</small>`;
+              <small>Please download the new version and manually update your extension. You're using v${localVersion}.</small>`;
           container.insertBefore(updateNotice, container.firstChild);
         } else {
           console.warn("Container element not found for update notification.");
         }
 
-        // Optional: Save the notified version to storage to prevent repeated notifications for the same version
-        // This is useful if you want to notify only once per new version
         chrome.storage.sync.set({ lastNotifiedVersion: remoteVersion });
       } else {
         console.log("Your extension is up to date or no newer version found.");
-        // Optional: If you want to hide the notification after user updates,
-        // you could check if lastNotifiedVersion is same as current localVersion and hide if it was previously shown
       }
     } catch (error) {
       console.error("Failed to check for updates:", error);
