@@ -106,11 +106,11 @@
     transition: 0.3s;
 }
 
-.popup-body input:checked + .slider {
+.popup-body input:checked+.slider {
     background-color: #007aff;
 }
 
-.popup-body input:checked + .slider:before {
+.popup-body input:checked+.slider:before {
     transform: translateX(20px);
 }
 
@@ -131,7 +131,7 @@
 }
 
 #backToTopButton:hover {
-    background-color: #0056b3; /* Tambahkan efek hover jika diperlukan */
+    background-color: #0056b3;
 }
 
 .submitted-mark {
@@ -140,7 +140,7 @@
     margin-left: 10px;
 }
 
-.blibli-copy-btn {
+.blibli-btn {
     display: block;
     width: 100%;
     margin: 15px 0;
@@ -154,13 +154,12 @@
     transition: background-color 0.2s;
 }
 
-.blibli-copy-btn:hover {
+.blibli-btn:hover {
     background-color: #0056b3;
 }
 
 .blibli-toast {
     position: fixed;
-    bottom: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background-color: #333;
@@ -169,12 +168,17 @@
     border-radius: 4px;
     z-index: 10000;
     opacity: 0;
-    transition: transform 0.3s, opacity 0.3s;
+    transition: transform 0.3s, opacity 0.3s, bottom 0.3s;
 }
 
 .blibli-toast.show {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+}
+
+.blibli-toast.hiding {
+    transform: translateX(-50%) translateY(100px);
+    opacity: 0;
 }
 
 .blibli-toast-error {

@@ -14,30 +14,60 @@
 - **Back To Top**: Add a "Back to Top" button for easy navigation.
 - **Inject Relevancy**: Inject relevancy ratings (Relevant, Less Relevant, Irrelevant) into products.
 - **Inject Reason**: Inject reasons for relevancy ratings into products.
-- **Inspect**: Inspect various metrics such as average price, promo products, sold products, rated products, average rating, Blibli provided products, official store products, relevancy products, and top reasons per swimlane.
+- **Inspect**: Inspect various metrics such as average price, promo products, sold products, rated products, average rating, Blibli provided products, official store products, relevancy products, top reasons per swimlane, and top locations per swimlane.
 - **Submitted Mark**: Mark swimlanes as submitted once the audit is completed.
+- **Download Products**: Export product data to Excel file (Blibli.com only).
+- **Copy Categories**: Copy selected categories to clipboard for easy reference.
 
 ## Installation
 
-### Microsoft Edge
+1. **Download the extension files**: 
+   - Go to the repository and download the extension files by clicking on [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip)
+   - Locate the downloaded ZIP file (usually in "Downloads" folder)
+   - Right-click and select "Extract All..." to unzip the contents
 
-1. **Download the extension files**: Go to the repository and download the extension files to your computer by clicking on [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip).
-2. **Unzip the downloaded file**: Locate the downloaded ZIP file on your computer (usually in the "Downloads" folder). Right-click on the file and select "Extract All..." to unzip the contents to a folder.
-3. **Open Microsoft Edge**: Launch the Microsoft Edge browser on your computer.
-4. **Navigate to the Extensions page**: In the address bar, type `edge://extensions/` and press Enter.
-5. **Enable Developer mode**: In the bottom left corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
-6. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you unzipped the extension files and select it.
-7. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
+2. **Open your browser**: 
+   - For Microsoft Edge: Launch Edge and type `edge://extensions/` in the address bar
+   - For Google Chrome: Launch Chrome and type `chrome://extensions/` in the address bar
 
-### Google Chrome
+3. **Enable Developer mode**:
+   - In Edge: Toggle switch in bottom left corner
+   - In Chrome: Toggle switch in top right corner
 
-1. **Download the extension files**: Go to the repository and download the extension files to your computer by clicking on [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip).
-2. **Unzip the downloaded file**: Locate the downloaded ZIP file on your computer (usually in the "Downloads" folder). Right-click on the file and select "Extract All..." to unzip the contents to a folder.
-3. **Open Google Chrome**: Launch the Google Chrome browser on your computer.
-4. **Navigate to the Extensions page**: In the address bar, type `chrome://extensions/` and press Enter.
-5. **Enable Developer mode**: In the top right corner of the Extensions page, you will see a toggle switch labeled "Developer mode". Click on it to enable Developer mode.
-6. **Load the extension**: Click on the "Load unpacked" button. A file dialog will appear. Navigate to the folder where you unzipped the extension files and select it.
-7. **Verify installation**: The extension should now be installed and active. You should see it listed on the Extensions page.
+4. **Load the extension**:
+   - Click "Load unpacked" button
+   - Navigate to your extracted folder
+   - Select the folder and click OK
+
+5. **Verify installation**:
+   - The extension should now appear in your list of extensions
+   - Make sure it's enabled (toggle switch should be on)
+
+## Updating Extension
+
+To update the extension to the latest version:
+
+1. **Download new version**: 
+   - Click [this link](https://github.com/faarismuda/Search-UI-Tools/archive/refs/heads/main.zip) to download the latest version
+   - Extract the ZIP file to a new folder
+
+2. **Find extension folder**: 
+   - Go to Extensions page (`edge://extensions/` for Edge or `chrome://extensions/` for Chrome)
+   - Find Search UI Tools in your list of extensions
+   - Click "Details" on the extension
+   - Look for "Source" or "Extension Location" and click "Show in folder"
+
+3. **Update files**: 
+   - Delete all files in the extension folder (except manifest.json if you want to keep your settings)
+   - Copy all files from the new version folder you extracted
+   - Paste them into the extension folder
+
+4. **Refresh extension**: 
+   - Go back to the Extensions page
+   - Find Search UI Tools
+   - Click the refresh icon (🔄) or reload button on the extension card
+
+That's it! Your extension should now be updated to the latest version.
 
 ## Notes
 
@@ -64,8 +94,6 @@ The extension requires the following permissions:
 ## Is This Repository Safe?
 
 Yes, this repository is safe to use. All source code is openly available in this repository, allowing you to inspect and review the code directly.
-
-All code can be viewed directly in this repository.
 
 ## License
 

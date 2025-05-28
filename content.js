@@ -60,100 +60,368 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
   }
 });
 
+// Fungsi showToast()
+function showToast(message, isError = false) {
+  // Get existing toasts
+  const existingToasts = document.querySelectorAll(".blibli-toast");
+  const toastHeight = 50; // Perkiraan tinggi toast (termasuk margin)
+  const marginBottom = 20;
+
+  // Create new toast
+  const toast = document.createElement("div");
+  toast.className = `blibli-toast ${isError ? "blibli-toast-error" : ""}`;
+  toast.textContent = message;
+
+  // Calculate position for new toast
+  let bottomPosition = marginBottom;
+  existingToasts.forEach((existingToast) => {
+    bottomPosition += existingToast.offsetHeight + 10; // 10px spacing between toasts
+  });
+
+  // Set initial position
+  toast.style.bottom = `${bottomPosition}px`;
+  document.body.appendChild(toast);
+
+  // Show animation
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Hide and remove after delay
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hiding");
+
+    setTimeout(() => {
+      if (toast && toast.parentNode) {
+        document.body.removeChild(toast);
+
+        // Reposition remaining toasts
+        const remainingToasts = document.querySelectorAll(".blibli-toast");
+        let newBottom = marginBottom;
+        remainingToasts.forEach((t) => {
+          if (t !== toast) {
+            t.style.bottom = `${newBottom}px`;
+            newBottom += t.offsetHeight + 10;
+          }
+        });
+      }
+    }, 300);
+  }, 3000);
+}
+
 // Fungsi untuk menginisialisasi fitur Copy Categories
 function initializeCopyCategories() {
   // Add button to page when loaded
   function init() {
-      if (document.querySelector('.nested-category-filter')) {
-          if (!document.getElementById('blibli-copy-categories')) {
-              const copyButton = document.createElement('button');
-              copyButton.id = 'blibli-copy-categories';
-              copyButton.className = 'blibli-copy-btn';
-              copyButton.textContent = 'Copy Categories';
-              copyButton.addEventListener('click', copySelectedCategories);
+    if (document.querySelector(".nested-category-filter")) {
+      if (!document.getElementById("blibli-copy-categories")) {
+        const copyButton = document.createElement("button");
+        copyButton.id = "blibli-copy-categories";
+        copyButton.className = "blibli-btn";
+        copyButton.textContent = "Copy Categories";
+        copyButton.addEventListener("click", copySelectedCategories);
 
-              const categoryFilter = document.querySelector('.nested-category-filter');
-              if (categoryFilter && categoryFilter.parentNode) {
-                  categoryFilter.parentNode.insertBefore(copyButton, categoryFilter.nextSibling);
-              }
-          }
+        const categoryFilter = document.querySelector(
+          ".nested-category-filter"
+        );
+        if (categoryFilter && categoryFilter.parentNode) {
+          categoryFilter.parentNode.insertBefore(
+            copyButton,
+            categoryFilter.nextSibling
+          );
+        }
       }
+    }
   }
 
   function copySelectedCategories() {
-      const categoryPaths = [];
-      const checkedBoxes = document.querySelectorAll('.blu-checkbox input[type="checkbox"][value="true"]');
-      checkedBoxes.forEach(checkbox => {
-          const path = getCategoryPath(checkbox);
-          if (path) {
-              categoryPaths.push(path);
-          }
-      });
-      const result = categoryPaths.join(';\n');
-      navigator.clipboard.writeText(result).then(() => {
-          showToast('Categories copied to clipboard!');
-      }).catch(err => {
-          console.error('Failed to copy: ', err);
-          showToast('Failed to copy categories', true);
+    const categoryPaths = [];
+    const checkedBoxes = document.querySelectorAll(
+      '.blu-checkbox input[type="checkbox"][value="true"]'
+    );
+
+    // Check if any categories are selected
+    if (checkedBoxes.length === 0) {
+      showToast("No categories selected", true);
+      return;
+    }
+
+    checkedBoxes.forEach((checkbox) => {
+      const path = getCategoryPath(checkbox);
+      if (path) {
+        categoryPaths.push(path);
+      }
+    });
+
+    const result = categoryPaths.join(";\n");
+    navigator.clipboard
+      .writeText(result)
+      .then(() => {
+        showToast("Categories copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+        showToast("Failed to copy categories", true);
       });
   }
 
   function getCategoryPath(checkbox) {
-      const categories = [];
-      let currentLabel = checkbox.closest('.blu-checkbox').querySelector('.blu-checkbox__content');
-      if (!currentLabel) return null;
-      categories.unshift(currentLabel.textContent.trim());
-      let currentElement = checkbox.closest('.nested-category-filter__row');
-      let parentFilter = currentElement.closest('.nested-category-filter');
-      while (parentFilter) {
-          const parentElement = parentFilter.parentElement;
-          if (parentElement) {
-              const parentRow = parentElement.querySelector(':scope > .nested-category-filter__row');
-              if (parentRow) {
-                  const parentLabel = parentRow.querySelector('.blu-checkbox__content');
-                  if (parentLabel) {
-                      categories.unshift(parentLabel.textContent.trim());
-                  }
-              }
-              parentFilter = parentElement.closest('.nested-category-filter');
-          } else {
-              break;
+    const categories = [];
+    let currentLabel = checkbox
+      .closest(".blu-checkbox")
+      .querySelector(".blu-checkbox__content");
+    if (!currentLabel) return null;
+    categories.unshift(currentLabel.textContent.trim());
+    let currentElement = checkbox.closest(".nested-category-filter__row");
+    let parentFilter = currentElement.closest(".nested-category-filter");
+    while (parentFilter) {
+      const parentElement = parentFilter.parentElement;
+      if (parentElement) {
+        const parentRow = parentElement.querySelector(
+          ":scope > .nested-category-filter__row"
+        );
+        if (parentRow) {
+          const parentLabel = parentRow.querySelector(".blu-checkbox__content");
+          if (parentLabel) {
+            categories.unshift(parentLabel.textContent.trim());
           }
+        }
+        parentFilter = parentElement.closest(".nested-category-filter");
+      } else {
+        break;
       }
-      return categories.join(' > ');
+    }
+    return categories.join(" > ");
   }
 
-  function showToast(message, isError = false) {
-      const toast = document.createElement('div');
-      toast.className = `blibli-toast ${isError ? 'blibli-toast-error' : ''}`;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-          toast.classList.add('show');
-      }, 10);
-      setTimeout(() => {
-          toast.classList.remove('show');
-          setTimeout(() => {
-              document.body.removeChild(toast);
-          }, 300);
-      }, 3000);
-  }
-
-  if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-      init();
+    init();
   }
 
-  const observer = new MutationObserver(function(mutations) {
-      if (document.querySelector('.nested-category-filter') && 
-          !document.getElementById('blibli-copy-categories')) {
-          init();
-      }
+  const observer = new MutationObserver(function (mutations) {
+    if (
+      document.querySelector(".filter-group__sections") &&
+      !document.getElementById("blibli-copy-categories")
+    ) {
+      init();
+    }
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 }
+
+async function downloadProductsToExcel() {
+  const productContentDiv = document.getElementById("productContentDiv");
+  if (!productContentDiv) {
+    showToast("Product content not found", true);
+    return;
+  }
+
+  // Fungsi untuk scroll ke bawah
+  async function scrollToBottom() {
+    return new Promise((resolve) => {
+      let lastHeight = document.documentElement.scrollHeight;
+      let scrollAttempts = 0;
+      const maxAttempts = 1; // Batasi jumlah scroll untuk mencegah infinite loop
+
+      function scroll() {
+        window.scrollTo(0, document.documentElement.scrollHeight);
+        setTimeout(() => {
+          const newHeight = document.documentElement.scrollHeight;
+          if (newHeight === lastHeight || scrollAttempts >= maxAttempts) {
+            window.scrollTo(0, 0); // Scroll kembali ke atas
+            resolve();
+          } else {
+            lastHeight = newHeight;
+            scrollAttempts++;
+            scroll();
+          }
+        }, 500); // Tunggu 0.5 detik setiap scroll
+      }
+
+      scroll();
+    });
+  }
+
+  // Tampilkan toast loading
+  showToast("Loading all products...");
+
+  // Scroll sampai semua produk terload
+  await scrollToBottom();
+
+  // Ambil semua container produk
+  const productContainers = productContentDiv.querySelectorAll(
+    ".elf-product-card__container"
+  );
+  const products = [];
+
+  productContainers.forEach((container) => {
+    const linkEl = container.querySelector(".elf-product-card");
+    if (!linkEl) return;
+    const href = linkEl.getAttribute("href");
+
+    // Buat full URL dengan menambahkan base URL jika href adalah relative path
+    const baseUrl = href.startsWith("http")
+      ? href
+      : `https://www.blibli.com${href}`;
+    const productUrl = baseUrl.split("?")[0]; // Ambil URL hanya sampai tanda "?"
+
+    // Ekstrak product id dari href
+    let productId = "";
+    if (href.includes("ps--")) {
+      let start = href.indexOf("ps--") + 4;
+      let end = href.indexOf("?", start);
+      if (end === -1) {
+        end = href.indexOf("&", start);
+      }
+      if (end === -1) {
+        productId = href.substring(start);
+      } else {
+        productId = href.substring(start, end);
+      }
+    } else if (href.includes("is--")) {
+      // Case 1: URL mengandung is--
+      let start = href.indexOf("is--") + 4;
+      let end = href.indexOf("?", start);
+      if (end === -1) {
+        end = href.indexOf("&", start);
+      }
+      if (end === -1) {
+        productId = href.substring(start);
+      } else {
+        productId = href.substring(start, end);
+      }
+    } else {
+      // Case 2: Jika tidak ada ps-- atau is--, cari parameter pid
+      const queryStr = href.split("?")[1];
+      if (queryStr) {
+        const urlParams = new URLSearchParams(queryStr);
+        // Coba cari pid terlebih dahulu, jika tidak ada baru cari pid1
+        productId = urlParams.get("pid") || urlParams.get("pid1") || "";
+      }
+    }
+
+    // Ambil judul produk
+    const titleEl = container.querySelector(".els-product__title");
+    const title = titleEl ? titleEl.textContent.trim() : "";
+
+    // Ambil harga produk
+    const priceEl = container.querySelector(".els-product__fixed-price");
+    let price = "";
+    if (priceEl) {
+      price =
+        priceEl.getAttribute("title") ||
+        priceEl.textContent.replace("Rp", "").trim();
+    }
+
+    // Ambil tipe seller
+    let sellerType = "";
+    const sellerEl = container.querySelector(".els-product__seller-left");
+    if (sellerEl) {
+      const imgs = sellerEl.querySelectorAll("img");
+      imgs.forEach((img) => {
+        const altText = img.getAttribute("alt");
+        if (altText) {
+          const altLower = altText.toLowerCase();
+          if (altLower.includes("official store")) {
+            sellerType = "Official Store";
+          } else if (altLower.includes("fullfilled by blibli")) {
+            sellerType = "Disediakan Blibli";
+          }
+        }
+      });
+    }
+
+    // Tambahkan productUrl ke object products
+    products.push({ productId, title, price, sellerType, productUrl });
+  });
+
+  // Menggunakan SheetJS untuk membuat worksheet dan workbook
+  const worksheet = XLSX.utils.json_to_sheet(products);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+
+  // Tulis workbook ke dalam array buffer untuk file XLSX
+  const workbookBinary = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+  const blob = new Blob([workbookBinary], { type: "application/octet-stream" });
+
+  // Buat link download dan trigger download
+  const downloadLink = document.createElement("a");
+  downloadLink.href = URL.createObjectURL(blob);
+
+  // Dapatkan nama file dari URL
+  const currentUrl = window.location.href;
+  let fileName = "products";
+
+  // Cek jika URL mengandung '/cari/'
+  if (currentUrl.includes('/cari/')) {
+      // Ambil keyword pencarian dari URL
+      const searchTerm = decodeURIComponent(currentUrl.split('/cari/')[1].split('?')[0]);
+      // Bersihkan keyword dan ganti spasi dengan dash
+      fileName = `products_${searchTerm.replace(/\s+/g, '-').toLowerCase()}`;
+  }
+
+  downloadLink.download = `${fileName}.xlsx`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+
+  showToast("Products downloaded to Excel");
+}
+
+function addDownloadExcelButton() {
+  if (document.getElementById("downloadExcelButton")) return;
+
+  // Cari container filter pertama
+  const filterContainer = document.querySelector(
+    ".filter-container.large-3__full-width"
+  );
+  if (filterContainer) {
+    const btn = document.createElement("button");
+    btn.id = "downloadExcelButton";
+    btn.className = "blibli-btn";
+    btn.style.marginTop = "0";
+    btn.innerText = "Download Products";
+    btn.addEventListener("click", downloadProductsToExcel);
+
+    // Cari filter group pertama
+    const firstFilterGroup = filterContainer.querySelector(
+      ".filter-group.filter-container__groups"
+    );
+    if (firstFilterGroup) {
+      // Sisipkan tombol sebelum filter group pertama
+      filterContainer.insertBefore(btn, firstFilterGroup);
+    }
+  }
+}
+
+// Inisialisasi awal
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", addDownloadExcelButton);
+} else {
+  addDownloadExcelButton();
+}
+
+// Observer untuk memastikan tombol tetap ada setelah DOM berubah
+const downloadButtonObserver = new MutationObserver(function (mutations) {
+  const filterContainer = document.querySelector(
+    ".filter-container.large-3__full-width"
+  );
+  if (filterContainer && !document.getElementById("downloadExcelButton")) {
+    addDownloadExcelButton();
+  }
+});
+
+downloadButtonObserver.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
 
 function sortProducts(order) {
   const swimlanes = document.querySelectorAll(".swimlane__heading"); // Select all swimlanes
@@ -257,9 +525,7 @@ function highlightAds(enabled) {
   const cards = document.querySelectorAll(".product__card, .els-product");
 
   cards.forEach((card) => {
-    const adTag = card.querySelector(
-      ".product__card__tag__ad, .b-ads"
-    );
+    const adTag = card.querySelector(".product__card__tag__ad, .b-ads");
     if (adTag) {
       card.style.backgroundColor = enabled ? "#d2e7ff" : ""; // Nyala jika true, mati jika false
     }
@@ -286,9 +552,9 @@ function markSubmittedSwimlanes() {
         const newSubmittedMark = document.createElement("span");
         newSubmittedMark.textContent = " SUBMITTED ✔";
         newSubmittedMark.className = "submitted-mark";
-    
+
         swimlane.appendChild(newSubmittedMark);
-    }
+      }
     } else {
       if (submittedMark) {
         swimlane.removeChild(submittedMark);
@@ -656,11 +922,15 @@ function countTopLocationsPerSwimlane() {
 
   swimlanes.forEach((swimlane) => {
     const swimlaneName = swimlane.textContent.trim();
-    const productCards = swimlane.parentElement.querySelectorAll(".product__card__link");
+    const productCards = swimlane.parentElement.querySelectorAll(
+      ".product__card__link"
+    );
     const locationCounts = {};
 
     productCards.forEach((card) => {
-      const locationElements = card.querySelectorAll(".product__body__seller-location-name");
+      const locationElements = card.querySelectorAll(
+        ".product__body__seller-location-name"
+      );
       locationElements.forEach((locationElement) => {
         let locationText = locationElement.textContent.trim();
         if (locationText.includes("Kota") || locationText.includes("Kab.")) {

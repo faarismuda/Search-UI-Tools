@@ -22,7 +22,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>", "file://*/*"],
-      "js": ["content.js"],
+      "js": ["libs/xlsx.full.min.js", "content.js"],
       "css": ["styles.css"]
     }
   ],
@@ -31,8 +31,11 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["/images/*.png"],
-      "matches": ["https://searchcenter.gdn-app.com/*"]
+      "resources": ["/images/*.png", "libs/xlsx.full.min.js"],
+      "matches": [
+        "https://searchcenter.gdn-app.com/*",
+        "https://www.blibli.com/*"
+      ]
     }
   ]
 }
