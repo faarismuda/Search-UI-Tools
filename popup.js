@@ -165,9 +165,9 @@ document.addEventListener("DOMContentLoaded", () => {
           updateNotice.style.marginBottom = "10px";
           updateNotice.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>New changes on GitHub!</span>
+              <span>Update Available!</span>
               <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
-                 style="color: white; text-decoration: underline;">Download latest</a>
+                 style="color: white; text-decoration: underline;">Download</a>
             </div>
             <small>Manually download and install the new version.</small>`;
           container.insertBefore(updateNotice, container.firstChild);
