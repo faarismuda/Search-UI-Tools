@@ -78,15 +78,6 @@ That's it! Your extension should now be updated to the latest version.
 - The extension has not been tested on browsers other than Chromium-based browsers.
 - This extension is not intended to speed up the audit process, but rather to make it more accurate.
 
-## Permissions
-
-The extension requires the following permissions:
-
-- `activeTab`: To interact with the currently active tab.
-- `storage`: To save and retrieve settings.
-- `contextMenus`: To add context menu items.
-- `scripting`: To inject scripts into web pages.
-
 ## Is This Repository Safe?
 
 Yes, this repository is safe to use. All source code is openly available in this repository, allowing you to inspect and review the code directly.
