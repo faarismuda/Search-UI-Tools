@@ -135,50 +135,42 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add update checker function
   async function checkForUpdates() {
     const GITHUB_REPO = "faarismuda/Search-UI-Tools";
-    const GITHUB_API_LATEST_COMMIT = `https://api.github.com/repos/${GITHUB_REPO}/commits`;
+    const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/manifest.json`;
 
     try {
-      const response = await fetch(GITHUB_API_LATEST_COMMIT);
+      // Get current version from local manifest
+      const localManifest = chrome.runtime.getManifest();
+      const currentVersion = localManifest.version;
+
+      // Get latest version from GitHub
+      const response = await fetch(GITHUB_RAW_URL);
       if (!response.ok) {
-        console.error("Failed to fetch latest commit:", response.status);
+        console.error("Failed to fetch manifest:", response.status);
         return;
       }
-      const commits = await response.json();
-      if (!commits || commits.length === 0) {
-        console.warn("No commits found in the repository.");
-        return;
+
+      const remoteManifest = await response.json();
+      const latestVersion = remoteManifest.version;
+
+      // Compare versions
+      if (currentVersion !== latestVersion) {
+        // Show update notification
+        const container = document.querySelector(".container");
+        const updateNotice = document.createElement("div");
+        updateNotice.style.backgroundColor = "#FFA000";
+        updateNotice.style.color = "white";
+        updateNotice.style.padding = "10px";
+        updateNotice.style.borderRadius = "8px";
+        updateNotice.style.marginBottom = "10px";
+        updateNotice.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span>New version ${latestVersion} available!</span>
+          <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
+             style="color: white; text-decoration: underline;">Download</a>
+        </div>
+        <small>Current version: ${currentVersion}</small>`;
+        container.insertBefore(updateNotice, container.firstChild);
       }
-      const latestCommitSHA = commits[0].sha;
-
-      // Get the last known commit SHA from storage
-      chrome.storage.sync.get("lastKnownCommitSHA", (data) => {
-        const lastKnownCommitSHA = data.lastKnownCommitSHA;
-
-        if (lastKnownCommitSHA && lastKnownCommitSHA !== latestCommitSHA) {
-          // Show update notification with manual update instructions
-          const container = document.querySelector(".container");
-          const updateNotice = document.createElement("div");
-          updateNotice.style.backgroundColor = "#FFA000"; // A distinct color for manual update
-          updateNotice.style.color = "white";
-          updateNotice.style.padding = "10px";
-          updateNotice.style.borderRadius = "8px";
-          updateNotice.style.marginBottom = "10px";
-          updateNotice.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>Update Available!</span>
-              <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
-                 style="color: white; text-decoration: underline;">Download</a>
-            </div>
-            <small>Manually download and install the new version.</small>`;
-          container.insertBefore(updateNotice, container.firstChild);
-
-          // Update the last known commit SHA in storage
-          chrome.storage.sync.set({ lastKnownCommitSHA: latestCommitSHA });
-        } else if (!lastKnownCommitSHA) {
-          // On first run or after clearing storage, store the initial SHA
-          chrome.storage.sync.set({ lastKnownCommitSHA: latestCommitSHA });
-        }
-      });
     } catch (error) {
       console.error("Failed to check for updates:", error);
     }
