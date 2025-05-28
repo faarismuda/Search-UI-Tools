@@ -173,11 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
           updateNotice.style.marginBottom = "10px";
           updateNotice.innerHTML = `
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span>New version available!</span>
+                <span>New version (${remoteVersion}) available!</span>
                 <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
                    style="color: white; text-decoration: underline;">Download v${remoteVersion}</a>
               </div>
-              <small>Please download the new version and manually update your extension. You're using v${localVersion}.</small>`;
+              <small>Please download the new version and manually update your extension.</small>`;
           container.insertBefore(updateNotice, container.firstChild);
         } else {
           console.warn("Container element not found for update notification.");
