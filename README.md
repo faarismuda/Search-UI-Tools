@@ -17,7 +17,7 @@
 - **Inspect**: Inspect various metrics such as average price, promo products, sold products, rated products, average rating, Blibli provided products, official store products, relevancy products, top reasons per swimlane, and top locations per swimlane.
 - **Submitted Mark**: Mark swimlanes as submitted once the audit is completed.
 - **Download Products**: Export product data to Excel file (Blibli.com only).
-- **Copy Categories**: Copy selected categories to clipboard for easy reference.
+- **Copy Categories**: Copy selected categories to clipboard for easy reference (Blibli.com only).
 
 ## Installation
 
@@ -58,7 +58,7 @@ To update the extension to the latest version:
    - Look for "Source" or "Extension Location" and click "Show in folder"
 
 3. **Update files**: 
-   - Delete all files in the extension folder (except manifest.json if you want to keep your settings)
+   - Delete all files in the extension folder
    - Copy all files from the new version folder you extracted
    - Paste them into the extension folder
 
