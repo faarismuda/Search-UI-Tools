@@ -170,14 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
           updateNotice.style.color = "white";
           updateNotice.style.padding = "10px";
           updateNotice.style.borderRadius = "8px";
-          updateNotice.style.marginBottom = "10px";
           updateNotice.innerHTML = `
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: bold;">Update available!</span>
+                <span style="font-weight: bold;padding-bottom: 5px;">Update available!</span>
                 <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
-                   style="color: white; text-decoration: underline;">Download v${remoteVersion}</a>
+                   style="color: white;text-decoration: underline;padding-bottom: 5px;">Download v${remoteVersion}</a>
               </div>
-              <small style="margin-top: 5px;">You're using v${localVersion}. Please download the new version and manually update your extension.</small>`;
+              <small>You're using v${localVersion}. Please <a href="https://github.com/faarismuda/Search-UI-Tools/blob/main/README.md#updating-extension" target="_blank" style="color: white; text-decoration: underline;">manually update</a> your extension.</small>`;
           container.insertBefore(updateNotice, container.firstChild);
         } else {
           console.warn("Container element not found for update notification.");
