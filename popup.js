@@ -190,10 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Helper function to compare semantic versions (e.g., "1.0.0" vs "1.0.1")
-  // Returns:
-  //   1 if v1 > v2
-  //  -1 if v1 < v2
-  //   0 if v1 == v2
   function compareVersions(v1, v2) {
     const parts1 = v1.split(".").map(Number);
     const parts2 = v2.split(".").map(Number);
