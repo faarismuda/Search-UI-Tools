@@ -131,4 +131,47 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  // Add update checker function
+  async function checkForUpdates() {
+    const GITHUB_REPO = "faarismuda/Search-UI-Tools";
+    const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits`;
+
+    try {
+      const response = await fetch(GITHUB_API);
+      const commits = await response.json();
+      const latestCommit = commits[0].sha;
+
+      // Get last checked version from storage
+      chrome.storage.sync.get("lastCheckedVersion", (data) => {
+        const lastCheckedVersion = data.lastCheckedVersion;
+
+        if (lastCheckedVersion !== latestCommit) {
+          // Show update notification
+          const container = document.querySelector(".container");
+          const updateNotice = document.createElement("div");
+          updateNotice.style.backgroundColor = "#4CAF50";
+          updateNotice.style.color = "white";
+          updateNotice.style.padding = "10px";
+          updateNotice.style.borderRadius = "8px";
+          updateNotice.style.marginBottom = "10px";
+          updateNotice.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>New update available!</span>
+              <a href="https://github.com/${GITHUB_REPO}" target="_blank" 
+                 style="color: white; text-decoration: underline;">Update now</a>
+            </div>`;
+          container.insertBefore(updateNotice, container.firstChild);
+
+          // Save new version to storage
+          chrome.storage.sync.set({ lastCheckedVersion: latestCommit });
+        }
+      });
+    } catch (error) {
+      console.error("Failed to check for updates:", error);
+    }
+  }
+
+  // Check for updates when popup opens
+  checkForUpdates();
 });
