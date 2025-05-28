@@ -182,8 +182,14 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           console.warn("Container element not found for update notification.");
         }
+
+        // Optional: Save the notified version to storage to prevent repeated notifications for the same version
+        // This is useful if you want to notify only once per new version
+        chrome.storage.sync.set({ lastNotifiedVersion: remoteVersion });
       } else {
         console.log("Your extension is up to date or no newer version found.");
+        // Optional: If you want to hide the notification after user updates,
+        // you could check if lastNotifiedVersion is same as current localVersion and hide if it was previously shown
       }
     } catch (error) {
       console.error("Failed to check for updates:", error);
