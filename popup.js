@@ -182,8 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           console.warn("Container element not found for update notification.");
         }
-
-        chrome.storage.sync.set({ lastNotifiedVersion: remoteVersion });
       } else {
         console.log("Your extension is up to date or no newer version found.");
       }
