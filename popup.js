@@ -166,17 +166,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (container) {
           // Ensure container exists before inserting
           const updateNotice = document.createElement("div");
-          updateNotice.style.backgroundColor = "#2196F3"; // A distinct color for version-based update
-          updateNotice.style.color = "white";
-          updateNotice.style.padding = "10px";
-          updateNotice.style.borderRadius = "8px";
+          updateNotice.className = "update-notice";
           updateNotice.innerHTML = `
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: bold;padding-bottom: 5px;">Update available!</span>
-                <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" target="_blank"
-                   style="color: white;text-decoration: underline;padding-bottom: 5px;">Download v${remoteVersion}</a>
+              <div class="update-notice-header">
+                  <span class="update-notice-title">Update available!</span>
+                  <a href="https://github.com/${GITHUB_REPO}/archive/refs/heads/main.zip" 
+                    target="_blank" 
+                    class="update-notice-download">Download v${remoteVersion}</a>
               </div>
-              <small>You're using v${localVersion}. Please <a href="https://github.com/faarismuda/Search-UI-Tools/blob/main/README.md#updating-extension" target="_blank" style="color: white; text-decoration: underline;">manually update</a> your extension.</small>`;
+              <small class="update-notice-info">You're using v${localVersion}. Please 
+                  <a href="https://github.com/faarismuda/Search-UI-Tools/blob/main/README.md#updating-extension" 
+                    target="_blank">manually update</a> your extension.
+              </small>`;
           container.insertBefore(updateNotice, container.firstChild);
         } else {
           console.warn("Container element not found for update notification.");

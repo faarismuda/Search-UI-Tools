@@ -1,3 +1,4 @@
+/* Popup Styles */
 .popup-body {
     width: 300px;
     padding: 10px;
@@ -114,6 +115,7 @@
     transform: translateX(20px);
 }
 
+/* Back to Top Button Styles */
 #backToTopButton {
     position: fixed;
     bottom: 20px;
@@ -134,12 +136,14 @@
     background-color: #0056b3;
 }
 
+/* Submitted Mark Styles */
 .submitted-mark {
     color: green;
     font-weight: bold;
     margin-left: 10px;
 }
 
+/* Blibli Button Styles */
 .blibli-btn {
     display: block;
     width: 100%;
@@ -158,6 +162,7 @@
     background-color: #0056b3;
 }
 
+/* Blibli Toast Styles */
 .blibli-toast {
     position: fixed;
     left: 50%;
@@ -183,4 +188,39 @@
 
 .blibli-toast-error {
     background-color: #e74c3c;
+}
+
+/* Update Notice Styles */
+.update-notice {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.update-notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.update-notice-title {
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.update-notice-download {
+    color: white;
+    text-decoration: underline;
+    padding-bottom: 5px;
+}
+
+.update-notice-info {
+    font-size: 0.875rem;
+}
+
+.update-notice-info a {
+    color: white;
+    text-decoration: underline;
 }
