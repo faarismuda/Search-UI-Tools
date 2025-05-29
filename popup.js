@@ -135,7 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add update checker function
   async function checkForUpdates() {
     const GITHUB_REPO = "faarismuda/Search-UI-Tools";
-    const CDN_URL = `https://cdn.jsdelivr.net/gh/${GITHUB_REPO}/manifest.json`;
+    const MANIFEST_FILE_PATH = "manifest.json"; // Path to your manifest file in the repo
+    const GITHUB_RAW_MANIFEST_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/${MANIFEST_FILE_PATH}`; // Assuming 'main' branch
 
     try {
       // 1. Get local extension version from its manifest
@@ -143,8 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const localVersion = localManifest.version;
       console.log("Local Version:", localVersion);
 
-      // 2. Fetch remote manifest.json from JSDelivr CDN
-      const response = await fetch(CDN_URL);
+      // 2. Fetch remote manifest.json from GitHub
+      const response = await fetch(GITHUB_RAW_MANIFEST_URL);
       if (!response.ok) {
         console.error(
           "Failed to fetch remote manifest:",

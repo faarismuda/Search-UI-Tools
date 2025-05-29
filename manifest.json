@@ -4,7 +4,7 @@
   "version": "1.0.2",
   "description": "An extension to facilitate keyword audits in the Search UI.",
   "permissions": ["activeTab", "storage", "contextMenus", "scripting"],
-  "host_permissions": ["https://*/*", "http://*/*", "https://cdn.jsdelivr.net/*"],
+  "host_permissions": ["https://*/*", "http://*/*", "https://raw.githubusercontent.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_logo": {
