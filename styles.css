@@ -164,6 +164,7 @@
 
 /* Blibli Toast Styles */
 .blibli-toast {
+    font-family: blibli, -apple-system, segoe ui, roboto, helvetica, arial, sans-serif;
     position: fixed;
     left: 50%;
     transform: translateX(-50%) translateY(100px);

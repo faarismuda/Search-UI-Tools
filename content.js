@@ -11,11 +11,16 @@ let autoApplyEnabled = false;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "sort") {
-    sortProducts(request.order);
+    const result = sortProducts(request.order);
+    sendResponse(result);
+  } else if (request.action === "showToast") {
+    showToast(request.message);
   } else if (request.action === "injectReason") {
-    injectReason(request.reason);
+    const result = injectReason(request.reason);
+    sendResponse(result);
   } else if (request.action === "injectRelevancy") {
-    injectRelevancy(request.relevancy);
+    const result = injectRelevancy(request.relevancy);
+    sendResponse(result);
   } else if (request.action === "toggleHighlightAds") {
     highlightAds(request.enabled);
     sendResponse({ status: "updated" });
@@ -380,7 +385,7 @@ async function downloadProductsToExcel() {
       } else {
         productId = href.substring(start, end);
       }
-      
+
       // Remove -00001 if exists
       if (productId.endsWith("-00001")) {
         productId = productId.slice(0, -6); // Remove last 6 characters (-00001)
@@ -517,10 +522,10 @@ downloadButtonObserver.observe(document.body, {
 });
 
 function sortProducts(order) {
-  const swimlanes = document.querySelectorAll(".swimlane__heading"); // Select all swimlanes
+  const swimlanes = document.querySelectorAll(".swimlane__heading");
 
   swimlanes.forEach((swimlane) => {
-    const productGrid = swimlane.parentElement.querySelector(".product-grid"); // Select the product grid within the swimlane
+    const productGrid = swimlane.parentElement.querySelector(".product-grid");
 
     if (productGrid) {
       const productCards = Array.from(
@@ -549,6 +554,8 @@ function sortProducts(order) {
       });
     }
   });
+
+  return { status: "sorted" }; // Add this return value
 }
 
 function getPrice(productCard) {
@@ -585,6 +592,8 @@ function injectReason(reason) {
       select.dispatchEvent(event);
     }
   });
+
+  return { status: "injected" }; // Add return value
 }
 
 function injectRelevancy(relevancy) {
@@ -594,13 +603,10 @@ function injectRelevancy(relevancy) {
 
   relevancyGroups.forEach((group) => {
     const radioButtons = group.querySelectorAll('input[type="radio"]');
-
-    // Cek apakah ada radio button yang sudah dipilih
     const isAlreadySelected = Array.from(radioButtons).some(
       (radio) => radio.checked
     );
 
-    // Jika tidak ada yang terpilih, maka inject relevancy
     if (!isAlreadySelected) {
       radioButtons.forEach((radio) => {
         if (radio.value === relevancy) {
@@ -611,6 +617,8 @@ function injectRelevancy(relevancy) {
       });
     }
   });
+
+  return { status: "injected" }; // Add return value
 }
 
 // Fungsi untuk menyalakan/mematikan highlight

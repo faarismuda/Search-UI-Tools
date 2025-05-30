@@ -28,13 +28,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("sort-price-asc").addEventListener("click", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "sort", order: "asc" });
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { action: "sort", order: "asc" },
+        (response) => {
+          if (response && response.status === "sorted") {
+            chrome.tabs.sendMessage(tabs[0].id, {
+              action: "showToast",
+              message: "Products sorted by price: Low to High",
+            });
+          }
+        }
+      );
     });
   });
 
   document.getElementById("sort-price-desc").addEventListener("click", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "sort", order: "desc" });
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { action: "sort", order: "desc" },
+        (response) => {
+          if (response && response.status === "sorted") {
+            chrome.tabs.sendMessage(tabs[0].id, {
+              action: "showToast",
+              message: "Products sorted by price: High to Low",
+            });
+          }
+        }
+      );
     });
   });
 
@@ -42,10 +64,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedReason = document.getElementById("reason-select").value;
     if (selectedReason) {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: "injectReason",
-          reason: selectedReason,
-        });
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          {
+            action: "injectReason",
+            reason: selectedReason,
+          },
+          (response) => {
+            if (response && response.status === "injected") {
+              chrome.tabs.sendMessage(tabs[0].id, {
+                action: "showToast",
+                message: `Reason "${selectedReason}" injected`,
+              });
+            }
+          }
+        );
       });
     }
   });
@@ -54,10 +87,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedRelevancy = document.getElementById("relevancy-select").value;
     if (selectedRelevancy !== "") {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: "injectRelevancy",
-          relevancy: selectedRelevancy,
-        });
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          {
+            action: "injectRelevancy",
+            relevancy: selectedRelevancy,
+          },
+          (response) => {
+            if (response && response.status === "injected") {
+              const relevancyText =
+                selectedRelevancy === "2"
+                  ? "Relevant"
+                  : selectedRelevancy === "1"
+                  ? "Less Relevant"
+                  : "Irrelevant";
+              chrome.tabs.sendMessage(tabs[0].id, {
+                action: "showToast",
+                message: `Relevancy "${relevancyText}" injected`,
+              });
+            }
+          }
+        );
       });
     }
   });
