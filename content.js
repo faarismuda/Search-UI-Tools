@@ -85,7 +85,6 @@ chrome.storage.sync.get("autoApplyEnabled", (data) => {
 function showToast(message, isError = false) {
   // Get existing toasts
   const existingToasts = document.querySelectorAll(".blibli-toast");
-  const toastHeight = 50; // Perkiraan tinggi toast (termasuk margin)
   const marginBottom = 20;
 
   // Create new toast
