@@ -380,6 +380,11 @@ async function downloadProductsToExcel() {
       } else {
         productId = href.substring(start, end);
       }
+      
+      // Remove -00001 if exists
+      if (productId.endsWith("-00001")) {
+        productId = productId.slice(0, -6); // Remove last 6 characters (-00001)
+      }
     } else {
       // Case 2: Jika tidak ada ps-- atau is--, cari parameter pid
       const queryStr = href.split("?")[1];
