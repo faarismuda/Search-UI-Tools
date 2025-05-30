@@ -132,6 +132,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  const toggleAutoApplySwitch = document.getElementById("toggle-auto-apply");
+
+  // Get last state from storage
+  chrome.storage.sync.get("autoApplyEnabled", (data) => {
+    if (data.autoApplyEnabled === undefined) {
+      chrome.storage.sync.set({ autoApplyEnabled: false }, () => {
+        toggleAutoApplySwitch.checked = false;
+      });
+    } else {
+      toggleAutoApplySwitch.checked = data.autoApplyEnabled;
+    }
+  });
+
+  // Toggle changes
+  toggleAutoApplySwitch.addEventListener("change", () => {
+    const isEnabled = toggleAutoApplySwitch.checked;
+    chrome.storage.sync.set({ autoApplyEnabled: isEnabled });
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: "toggleAutoApply",
+        enabled: isEnabled,
+      });
+    });
+  });
+
   // Add update checker function
   async function checkForUpdates() {
     const GITHUB_REPO = "faarismuda/Search-UI-Tools";

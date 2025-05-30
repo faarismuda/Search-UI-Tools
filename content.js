@@ -7,6 +7,8 @@ function isDomainAllowed() {
   );
 }
 
+let autoApplyEnabled = false;
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "sort") {
     sortProducts(request.order);
@@ -32,6 +34,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     inspectProducts();
   } else if (request.action === "showInspectPopup") {
     showInspectPopup();
+  } else if (request.action === "toggleAutoApply") {
+    autoApplyEnabled = request.enabled;
+    if (autoApplyEnabled) {
+      setupAutoApply();
+    }
+    sendResponse({ status: "updated" });
   }
 });
 
@@ -57,6 +65,14 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
     if (isDomainAllowed()) {
       addBackToTopButton();
     }
+  }
+});
+
+// Initialize state on page load
+chrome.storage.sync.get("autoApplyEnabled", (data) => {
+  autoApplyEnabled = !!data.autoApplyEnabled;
+  if (autoApplyEnabled) {
+    setupAutoApply();
   }
 });
 
@@ -108,6 +124,76 @@ function showToast(message, isError = false) {
       }
     }, 300);
   }, 3000);
+}
+
+function setupAutoApply() {
+  // Listen for relevancy changes
+  document.addEventListener("change", function (e) {
+    if (!autoApplyEnabled) return;
+
+    // Handle relevancy selection
+    if (e.target.matches('.product__body__relevancy input[type="radio"]')) {
+      const selectedValue = e.target.value;
+      const productCard = e.target.closest(".product__card__link");
+      if (!productCard) return;
+
+      // Get product title
+      const productTitle = productCard
+        .querySelector(".product__title")
+        .textContent.trim();
+
+      // Find identical products in other swimlanes
+      const allProducts = document.querySelectorAll(".product__card__link");
+      allProducts.forEach((product) => {
+        if (product !== productCard) {
+          const title = product
+            .querySelector(".product__title")
+            .textContent.trim();
+          if (title === productTitle) {
+            // Set same relevancy
+            const radio = product.querySelector(
+              `.product__body__relevancy input[value="${selectedValue}"]`
+            );
+            if (radio && !radio.checked) {
+              radio.checked = true;
+              radio.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+          }
+        }
+      });
+    }
+
+    // Handle reason selection
+    if (e.target.matches(".single-select-reason")) {
+      const selectedReason = e.target.value;
+      const productCard = e.target.closest(".product__card__link");
+      if (!productCard) return;
+
+      const productTitle = productCard
+        .querySelector(".product__title")
+        .textContent.trim();
+
+      // Find identical products
+      const allProducts = document.querySelectorAll(".product__card__link");
+      allProducts.forEach((product) => {
+        if (product !== productCard) {
+          const title = product
+            .querySelector(".product__title")
+            .textContent.trim();
+          if (title === productTitle) {
+            // Set same reason
+            const reasonSelect = product.querySelector(".single-select-reason");
+            if (reasonSelect && reasonSelect.value !== selectedReason) {
+              reasonSelect.value = selectedReason;
+              reasonSelect.dispatchEvent(
+                new Event("change", { bubbles: true })
+              );
+            }
+          }
+        }
+      });
+    }
+  });
 }
 
 // Fungsi untuk menginisialisasi fitur Copy Categories
@@ -360,11 +446,13 @@ async function downloadProductsToExcel() {
   let fileName = "products";
 
   // Cek jika URL mengandung '/cari/'
-  if (currentUrl.includes('/cari/')) {
-      // Ambil keyword pencarian dari URL
-      const searchTerm = decodeURIComponent(currentUrl.split('/cari/')[1].split('?')[0]);
-      // Bersihkan keyword dan ganti spasi dengan dash
-      fileName = `products_${searchTerm.replace(/\s+/g, '-').toLowerCase()}`;
+  if (currentUrl.includes("/cari/")) {
+    // Ambil keyword pencarian dari URL
+    const searchTerm = decodeURIComponent(
+      currentUrl.split("/cari/")[1].split("?")[0]
+    );
+    // Bersihkan keyword dan ganti spasi dengan dash
+    fileName = `products_${searchTerm.replace(/\s+/g, "-").toLowerCase()}`;
   }
 
   downloadLink.download = `${fileName}.xlsx`;
