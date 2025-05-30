@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const url = new URL(currentTab.url);
     const domain = url.hostname;
 
+    // For buttons
     const buttonsToDisable = [
       "sort-price-asc",
       "sort-price-desc",
@@ -14,13 +15,31 @@ document.addEventListener("DOMContentLoaded", () => {
       "inspect",
     ];
 
+    // For toggle switches
+    const togglesToDisable = ["toggle-auto-apply"];
+
     if (!domain.includes(allowedDomain)) {
+      // Disable buttons
       buttonsToDisable.forEach((buttonId) => {
         const button = document.getElementById(buttonId);
         if (button) {
           button.disabled = true;
           button.style.backgroundColor = "#ccc";
           button.style.cursor = "not-allowed";
+        }
+      });
+
+      // Disable toggles
+      togglesToDisable.forEach((toggleId) => {
+        const toggle = document.getElementById(toggleId);
+        if (toggle) {
+          toggle.disabled = true;
+          // Style the toggle switch container to look disabled
+          const toggleContainer = toggle.closest(".toggle-container");
+          if (toggleContainer) {
+            toggleContainer.style.opacity = "0.5";
+            toggleContainer.style.pointerEvents = "none"; // Prevent interaction
+          }
         }
       });
     }
