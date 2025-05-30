@@ -8,26 +8,27 @@
 
 <body class="popup-body">
     <div class="container">
-        <span>Sort Price</span>
+        <span title="Sort products by price">Sort Price</span>
         <div class="x-container">
-            <button id="sort-price-asc">Low to High</button>
-            <button id="sort-price-desc">High to Low</button>
+            <button id="sort-price-asc" title="Sort products by price from lowest to highest">Low to High</button>
+            <button id="sort-price-desc" title="Sort products by price from highest to lowest">High to Low</button>
         </div>
-        <div class="toggle-container">
+        <div class="toggle-container" title="Highlight advertisement products with blue background">
             <span>Highlight Ads</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="toggle-highlight-ads">
                 <span class="slider"></span>
             </label>
         </div>
-        <div class="toggle-container">
+        <div class="toggle-container" title="Show/Hide back to top button for easy navigation">
             <span>Back To Top</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="toggle-back-to-top">
                 <span class="slider"></span>
             </label>
         </div>
-        <div class="toggle-container">
+        <div class="toggle-container"
+            title="Automatically apply the same relevancy and reason to identical products across swimlanes">
             <span>Auto Apply</span>
             <label class="toggle-switch">
                 <input type="checkbox" id="toggle-auto-apply">
@@ -36,7 +37,7 @@
         </div>
         <div class="x-container">
             <div class="select">
-                <select id="relevancy-select">
+                <select id="relevancy-select" title="Select relevancy rating for products">
                     <option selected disabled value>Select Relevancy</option>
                     <option value="2">Relevant</option>
                     <option value="1">Less Relevant</option>
@@ -44,12 +45,12 @@
                 </select>
             </div>
             <div class="button">
-                <button id="inject-relevancy">Inject</button>
+                <button id="inject-relevancy" title="Apply selected relevancy to all unchecked products">Inject</button>
             </div>
         </div>
         <div class="x-container">
             <div class="select">
-                <select id="reason-select">
+                <select id="reason-select" title="Select reason for irrelevant/less relevant products">
                     <option selected disabled value>Select Reason</option>
                     <option value="Brand Mismatch">Brand Mismatch</option>
                     <option value="Size Mismatch">Size Mismatch</option>
@@ -72,11 +73,11 @@
                 </select>
             </div>
             <div class="button">
-                <button id="inject-reason">Inject</button>
+                <button id="inject-reason" title="Apply selected reason to all products without reason">Inject</button>
             </div>
         </div>
         <div class="button">
-            <button id="inspect">Inspect</button>
+            <button id="inspect" title="View metrics and statistics for products in each swimlane">Inspect</button>
         </div>
     </div>
 
