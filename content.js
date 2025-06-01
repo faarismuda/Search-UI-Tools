@@ -226,9 +226,10 @@ function initializeCopyCategories() {
   }
 
   function copySelectedCategories() {
+    // Specifically target category checkboxes within nested-category-filter
     const categoryPaths = [];
     const checkedBoxes = document.querySelectorAll(
-      '.blu-checkbox input[type="checkbox"][value="true"]'
+      '.nested-category-filter .blu-checkbox input[type="checkbox"][value="true"]'
     );
 
     // Check if any categories are selected
