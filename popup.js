@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "sort-price-desc",
       "inject-reason",
       "inject-relevancy",
+      "inject-ads-relevancy",
+      "inject-ads-reason",
       "inspect",
     ];
 
