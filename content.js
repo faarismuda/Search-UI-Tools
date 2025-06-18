@@ -21,6 +21,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "injectRelevancy") {
     const result = injectRelevancy(request.relevancy);
     sendResponse(result);
+  } else if (request.action === "injectAdsReason") {
+    const result = injectAdsReason(request.reason);
+    sendResponse(result);
+  } else if (request.action === "injectAdsRelevancy") {
+    const result = injectAdsRelevancy(request.relevancy);
+    sendResponse(result);
   } else if (request.action === "toggleHighlightAds") {
     highlightAds(request.enabled);
     sendResponse({ status: "updated" });
@@ -619,6 +625,60 @@ function injectRelevancy(relevancy) {
   });
 
   return { status: "injected" }; // Add return value
+}
+
+function injectAdsRelevancy(relevancy) {
+  const adsProducts = document.querySelectorAll(
+    ".product__card:has(.product__card__tag.product__card__tag__ad)"
+  );
+
+  adsProducts.forEach((product) => {
+    const relevancyGroup = product.querySelector(".product__body__relevancy");
+    if (relevancyGroup) {
+      const radioButtons = relevancyGroup.querySelectorAll(
+        'input[type="radio"]'
+      );
+      const isAlreadySelected = Array.from(radioButtons).some(
+        (radio) => radio.checked
+      );
+
+      if (!isAlreadySelected) {
+        radioButtons.forEach((radio) => {
+          if (radio.value === relevancy) {
+            radio.checked = true;
+            const event = new Event("change", { bubbles: true });
+            radio.dispatchEvent(event);
+          }
+        });
+      }
+    }
+  });
+
+  return { status: "injected" };
+}
+
+function injectAdsReason(reason) {
+  const adsProducts = document.querySelectorAll(
+    ".product__card:has(.product__card__tag.product__card__tag__ad)"
+  );
+
+  adsProducts.forEach((product) => {
+    const selectElement = product.querySelector(
+      ".single-select-reason:not(.single-select-reason__list)"
+    );
+    if (
+      selectElement &&
+      (selectElement.value === "" ||
+        selectElement.options[selectElement.selectedIndex].value ===
+          "Select a reason")
+    ) {
+      selectElement.value = reason;
+      const event = new Event("change", { bubbles: true });
+      selectElement.dispatchEvent(event);
+    }
+  });
+
+  return { status: "injected" };
 }
 
 // Fungsi untuk menyalakan/mematikan highlight

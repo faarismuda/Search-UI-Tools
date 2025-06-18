@@ -35,6 +35,7 @@
                 <span class="slider"></span>
             </label>
         </div>
+        <span title="Select relevancy and reasons for products">Product Relevancy and Reasons</span>
         <div class="x-container">
             <div class="select">
                 <select id="relevancy-select" title="Select relevancy rating for products">
@@ -74,6 +75,48 @@
             </div>
             <div class="button">
                 <button id="inject-reason" title="Apply selected reason to all products without reason">Inject</button>
+            </div>
+        </div>
+        <span title="Select relevancy and reasons for ads products">Ads Relevancy and Reasons</span>
+        <div class="x-container">
+            <div class="select">
+                <select id="ads-relevancy-select" title="Select relevancy rating for ads products">
+                    <option selected disabled value>Select Ads Relevancy</option>
+                    <option value="2">Relevant</option>
+                    <option value="1">Less Relevant</option>
+                    <option value="0">Irrelevant</option>
+                </select>
+            </div>
+            <div class="button">
+                <button id="inject-ads-relevancy" title="Apply selected relevancy to all ads products">Inject</button>
+            </div>
+        </div>
+        <div class="x-container">
+            <div class="select">
+                <select id="ads-reason-select" title="Select reason for irrelevant/less relevant ads products">
+                    <option selected disabled value>Select Ads Reason</option>
+                    <option value="Brand Mismatch">Brand Mismatch</option>
+                    <option value="Size Mismatch">Size Mismatch</option>
+                    <option value="Color Mismatch">Color Mismatch</option>
+                    <option value="Quantity/Count Mismatch">Quantity/Count Mismatch</option>
+                    <option value="Flavour Mismatch">Flavour Mismatch</option>
+                    <option value="Variant Mismatch">Variant Mismatch</option>
+                    <option value="Other Attributes Mismatch">Other Attributes Mismatch</option>
+                    <option value="Accessory Of The Main Product/Complimentary Product">Accessory Of The Main
+                        Product/Complimentary Product</option>
+                    <option value="Phone coming for accessories of that model">Phone coming for accessories of that
+                        model</option>
+                    <option value="Model Number Mismatch - Completely Different">Model Number Mismatch - Completely
+                        Different</option>
+                    <option value="Model Number Mismatch - Slight Variation">Model Number Mismatch - Slight Variation
+                    </option>
+                    <option value="Gender Mismatch">Gender Mismatch</option>
+                    <option value="Incorrect Product">Incorrect Product</option>
+                    <option value="Reason Not Listed">Reason Not Listed</option>
+                </select>
+            </div>
+            <div class="button">
+                <button id="inject-ads-reason" title="Apply selected reason to all ads products">Inject</button>
             </div>
         </div>
         <div class="button">

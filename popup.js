@@ -131,6 +131,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document
+    .getElementById("inject-ads-relevancy")
+    .addEventListener("click", () => {
+      const selectedRelevancy = document.getElementById(
+        "ads-relevancy-select"
+      ).value;
+      if (selectedRelevancy !== "") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            {
+              action: "injectAdsRelevancy",
+              relevancy: selectedRelevancy,
+            },
+            (response) => {
+              if (response && response.status === "injected") {
+                const relevancyText =
+                  selectedRelevancy === "2"
+                    ? "Relevant"
+                    : selectedRelevancy === "1"
+                    ? "Less Relevant"
+                    : "Irrelevant";
+                chrome.tabs.sendMessage(tabs[0].id, {
+                  action: "showToast",
+                  message: `Ads Relevancy "${relevancyText}" injected`,
+                });
+              }
+            }
+          );
+        });
+      }
+    });
+
+  document.getElementById("inject-ads-reason").addEventListener("click", () => {
+    const selectedReason = document.getElementById("ads-reason-select").value;
+    if (selectedReason) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          {
+            action: "injectAdsReason",
+            reason: selectedReason,
+          },
+          (response) => {
+            if (response && response.status === "injected") {
+              chrome.tabs.sendMessage(tabs[0].id, {
+                action: "showToast",
+                message: `Ads Reason "${selectedReason}" injected`,
+              });
+            }
+          }
+        );
+      });
+    }
+  });
+
   document.getElementById("inspect").addEventListener("click", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: "showInspectPopup" });
