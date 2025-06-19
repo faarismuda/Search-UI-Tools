@@ -15,7 +15,7 @@
     padding: 15px;
 }
 
-.header {
+.popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,7 +24,7 @@
     background-color: white;
 }
 
-.header h3 {
+.popup-header h3 {
     margin: 0;
     font-size: 1rem;
     color: #333;
@@ -63,7 +63,7 @@
     display: block;
 }
 
-.settings-header {
+.settings-popup-header {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -89,7 +89,7 @@
     vertical-align: middle;
 }
 
-.settings-header h3 {
+.settings-popup-header h3 {
     margin: 0;
     font-size: 1rem;
     color: #333;
