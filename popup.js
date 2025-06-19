@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Settings panel functionality
+  const settingsBtn = document.getElementById("settings-btn");
+  const backBtn = document.getElementById("back-btn");
+  const settingsPanel = document.getElementById("settings-panel");
+
+  settingsBtn.addEventListener("click", () => {
+    settingsPanel.classList.add("active");
+  });
+
+  backBtn.addEventListener("click", () => {
+    settingsPanel.classList.remove("active");
+  });
+
+  // Disable buttons and toggles if not on the allowed domain
   const allowedDomain = "searchcenter.gdn-app.com";
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -10,10 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const buttonsToDisable = [
       "sort-price-asc",
       "sort-price-desc",
-      "inject-reason",
-      "inject-relevancy",
-      "inject-ads-relevancy",
-      "inject-ads-reason",
+      "apply-reason",
+      "apply-relevancy",
+      "apply-ads-relevancy",
+      "apply-ads-reason",
       "inspect",
     ];
 
@@ -81,21 +95,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  document.getElementById("inject-reason").addEventListener("click", () => {
+  document.getElementById("apply-reason").addEventListener("click", () => {
     const selectedReason = document.getElementById("reason-select").value;
     if (selectedReason) {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(
           tabs[0].id,
           {
-            action: "injectReason",
+            action: "applyReason",
             reason: selectedReason,
           },
           (response) => {
-            if (response && response.status === "injected") {
+            if (response && response.status === "applied") {
               chrome.tabs.sendMessage(tabs[0].id, {
                 action: "showToast",
-                message: `Reason "${selectedReason}" injected`,
+                message: `Reason "${selectedReason}" applied`,
               });
             }
           }
@@ -104,18 +118,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("inject-relevancy").addEventListener("click", () => {
+  document.getElementById("apply-relevancy").addEventListener("click", () => {
     const selectedRelevancy = document.getElementById("relevancy-select").value;
     if (selectedRelevancy !== "") {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(
           tabs[0].id,
           {
-            action: "injectRelevancy",
+            action: "applyRelevancy",
             relevancy: selectedRelevancy,
           },
           (response) => {
-            if (response && response.status === "injected") {
+            if (response && response.status === "applied") {
               const relevancyText =
                 selectedRelevancy === "2"
                   ? "Relevant"
@@ -124,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   : "Irrelevant";
               chrome.tabs.sendMessage(tabs[0].id, {
                 action: "showToast",
-                message: `Relevancy "${relevancyText}" injected`,
+                message: `Relevancy "${relevancyText}" applied`,
               });
             }
           }
@@ -134,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document
-    .getElementById("inject-ads-relevancy")
+    .getElementById("apply-ads-relevancy")
     .addEventListener("click", () => {
       const selectedRelevancy = document.getElementById(
         "ads-relevancy-select"
@@ -144,11 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
           chrome.tabs.sendMessage(
             tabs[0].id,
             {
-              action: "injectAdsRelevancy",
+              action: "applyAdsRelevancy",
               relevancy: selectedRelevancy,
             },
             (response) => {
-              if (response && response.status === "injected") {
+              if (response && response.status === "applied") {
                 const relevancyText =
                   selectedRelevancy === "2"
                     ? "Relevant"
@@ -157,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "Irrelevant";
                 chrome.tabs.sendMessage(tabs[0].id, {
                   action: "showToast",
-                  message: `Ads Relevancy "${relevancyText}" injected`,
+                  message: `Ads Relevancy "${relevancyText}" applied`,
                 });
               }
             }
@@ -166,21 +180,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-  document.getElementById("inject-ads-reason").addEventListener("click", () => {
+  document.getElementById("apply-ads-reason").addEventListener("click", () => {
     const selectedReason = document.getElementById("ads-reason-select").value;
     if (selectedReason) {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(
           tabs[0].id,
           {
-            action: "injectAdsReason",
+            action: "applyAdsReason",
             reason: selectedReason,
           },
           (response) => {
-            if (response && response.status === "injected") {
+            if (response && response.status === "applied") {
               chrome.tabs.sendMessage(tabs[0].id, {
                 action: "showToast",
-                message: `Ads Reason "${selectedReason}" injected`,
+                message: `Ads Reason "${selectedReason}" applied`,
               });
             }
           }
@@ -259,27 +273,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const toggleAutoApplySwitch = document.getElementById("toggle-auto-apply");
+  const toggleSyncActionsSwitch = document.getElementById("toggle-auto-apply");
 
   // Get last state from storage
-  chrome.storage.sync.get("autoApplyEnabled", (data) => {
-    if (data.autoApplyEnabled === undefined) {
-      chrome.storage.sync.set({ autoApplyEnabled: false }, () => {
-        toggleAutoApplySwitch.checked = false;
+  chrome.storage.sync.get("syncActionsEnabled", (data) => {
+    if (data.syncActionsEnabled === undefined) {
+      chrome.storage.sync.set({ syncActionsEnabled: false }, () => {
+        toggleSyncActionsSwitch.checked = false;
       });
     } else {
-      toggleAutoApplySwitch.checked = data.autoApplyEnabled;
+      toggleSyncActionsSwitch.checked = data.syncActionsEnabled;
     }
   });
 
   // Toggle changes
-  toggleAutoApplySwitch.addEventListener("change", () => {
-    const isEnabled = toggleAutoApplySwitch.checked;
-    chrome.storage.sync.set({ autoApplyEnabled: isEnabled });
+  toggleSyncActionsSwitch.addEventListener("change", () => {
+    const isEnabled = toggleSyncActionsSwitch.checked;
+    chrome.storage.sync.set({ syncActionsEnabled: isEnabled });
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, {
-        action: "toggleAutoApply",
+        action: "toggleSyncActions",
         enabled: isEnabled,
       });
     });

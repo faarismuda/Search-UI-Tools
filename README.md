@@ -12,13 +12,13 @@
 - **Sort Price**: Sort products by price in ascending or descending order.
 - **Highlight Ads**: Highlight advertisement products.
 - **Back To Top**: Add a "Back to Top" button for easy navigation.
-- **Inject Relevancy**: Inject relevancy ratings (Relevant, Less Relevant, Irrelevant) into products.
-- **Inject Reason**: Inject reasons for relevancy ratings into products.
+- **Apply Relevancy**: Apply relevancy ratings (Relevant, Less Relevant, Irrelevant) into products or ads.
+- **Apply Reason**: Apply reasons for relevancy ratings into products or ads.
 - **Inspect**: Inspect various metrics such as average price, promo products, sold products, rated products, average rating, Blibli provided products, official store products, relevancy products, top reasons per swimlane, and top locations per swimlane.
 - **Submitted Mark**: Mark swimlanes as submitted once the audit is completed.
 - **Download Products**: Export product data to Excel file (Blibli.com only).
 - **Copy Categories**: Copy selected categories to clipboard for easy reference (Blibli.com only).
-- **Auto Apply**: Automatically apply the same relevancy and reason to identical products across different swimlanes to speed up the audit process.
+- **Sync Actions**: Automatically apply the same relevancy and reason to identical products across different swimlanes to speed up the audit process.
 
 ## Installation
 

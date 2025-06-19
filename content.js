@@ -7,7 +7,7 @@ function isDomainAllowed() {
   );
 }
 
-let autoApplyEnabled = false;
+let syncActionsEnabled = false;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "sort") {
@@ -15,17 +15,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(result);
   } else if (request.action === "showToast") {
     showToast(request.message);
-  } else if (request.action === "injectReason") {
-    const result = injectReason(request.reason);
+  } else if (request.action === "applyReason") {
+    const result = applyReason(request.reason);
     sendResponse(result);
-  } else if (request.action === "injectRelevancy") {
-    const result = injectRelevancy(request.relevancy);
+  } else if (request.action === "applyRelevancy") {
+    const result = applyRelevancy(request.relevancy);
     sendResponse(result);
-  } else if (request.action === "injectAdsReason") {
-    const result = injectAdsReason(request.reason);
+  } else if (request.action === "applyAdsReason") {
+    const result = applyAdsReason(request.reason);
     sendResponse(result);
-  } else if (request.action === "injectAdsRelevancy") {
-    const result = injectAdsRelevancy(request.relevancy);
+  } else if (request.action === "applyAdsRelevancy") {
+    const result = applyAdsRelevancy(request.relevancy);
     sendResponse(result);
   } else if (request.action === "toggleHighlightAds") {
     highlightAds(request.enabled);
@@ -45,10 +45,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     inspectProducts();
   } else if (request.action === "showInspectPopup") {
     showInspectPopup();
-  } else if (request.action === "toggleAutoApply") {
-    autoApplyEnabled = request.enabled;
-    if (autoApplyEnabled) {
-      setupAutoApply();
+  } else if (request.action === "toggleSyncActions") {
+    syncActionsEnabled = request.enabled;
+    if (syncActionsEnabled) {
+      setupSyncActions();
     }
     sendResponse({ status: "updated" });
   }
@@ -80,10 +80,10 @@ chrome.storage.sync.get("backToTopEnabled", (data) => {
 });
 
 // Initialize state on page load
-chrome.storage.sync.get("autoApplyEnabled", (data) => {
-  autoApplyEnabled = !!data.autoApplyEnabled;
-  if (autoApplyEnabled) {
-    setupAutoApply();
+chrome.storage.sync.get("syncActionsEnabled", (data) => {
+  syncActionsEnabled = !!data.syncActionsEnabled;
+  if (syncActionsEnabled) {
+    setupSyncActions();
   }
 });
 
@@ -136,10 +136,10 @@ function showToast(message, isError = false) {
   }, 3000);
 }
 
-function setupAutoApply() {
+function setupSyncActions() {
   // Listen for relevancy changes
   document.addEventListener("change", function (e) {
-    if (!autoApplyEnabled) return;
+    if (!syncActionsEnabled) return;
 
     // Handle relevancy selection
     if (e.target.matches('.product__body__relevancy input[type="radio"]')) {
@@ -583,7 +583,7 @@ function getPrice(productCard) {
   }
 }
 
-function injectReason(reason) {
+function applyReason(reason) {
   const selectElements = document.querySelectorAll(
     ".single-select-reason:not(.single-select-reason__list)"
   );
@@ -599,10 +599,10 @@ function injectReason(reason) {
     }
   });
 
-  return { status: "injected" }; // Add return value
+  return { status: "applied" }; // Add return value
 }
 
-function injectRelevancy(relevancy) {
+function applyRelevancy(relevancy) {
   const relevancyGroups = document.querySelectorAll(
     ".product__body__relevancy"
   );
@@ -624,10 +624,10 @@ function injectRelevancy(relevancy) {
     }
   });
 
-  return { status: "injected" }; // Add return value
+  return { status: "applied" }; // Add return value
 }
 
-function injectAdsRelevancy(relevancy) {
+function applyAdsRelevancy(relevancy) {
   const adsProducts = document.querySelectorAll(
     ".product__card:has(.product__card__tag.product__card__tag__ad)"
   );
@@ -654,10 +654,10 @@ function injectAdsRelevancy(relevancy) {
     }
   });
 
-  return { status: "injected" };
+  return { status: "applied" };
 }
 
-function injectAdsReason(reason) {
+function applyAdsReason(reason) {
   const adsProducts = document.querySelectorAll(
     ".product__card:has(.product__card__tag.product__card__tag__ad)"
   );
@@ -678,7 +678,7 @@ function injectAdsReason(reason) {
     }
   });
 
-  return { status: "injected" };
+  return { status: "applied" };
 }
 
 // Fungsi untuk menyalakan/mematikan highlight
