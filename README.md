@@ -19,6 +19,7 @@
 - **Download Products**: Export product data to Excel file (Blibli.com only).
 - **Copy Categories**: Copy selected categories to clipboard for easy reference (Blibli.com only).
 - **Sync Actions**: Automatically apply the same relevancy and reason to identical products across different swimlanes to speed up the audit process.
+- **Wider Relevancy Click Area**: The clickable area for relevancy radio buttons is enlarged, making it easier to select relevancy without accidentally opening the product link.
 
 ## Installation
 

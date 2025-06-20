@@ -323,3 +323,23 @@
     color: white;
     text-decoration: underline;
 }
+
+/* Perluas area klik radio button relevansi */
+.product__body__relevancy__item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px 8px 0 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    user-select: none;
+}
+
+.product__body__relevancy__item label:hover {
+    background: #f0f4fa;
+}
+
+.product__body__relevancy__item input[type="radio"] {
+    margin-right: 6px;
+    cursor: pointer;
+}
