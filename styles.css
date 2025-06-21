@@ -30,10 +30,28 @@
     color: #333;
 }
 
+.inspect-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 6px 4px 6px 0 !important;
+    width: auto !important;
+    cursor: pointer;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    transition: background-color 0.2s ease;
+}
+
+.inspect-icon {
+    width: 20px;
+    height: 20px;
+    fill: #666;
+    vertical-align: middle;
+}
+
 .settings-btn {
     background-color: transparent !important;
     border: none !important;
-    padding: 6px 0 6px 8px !important;
+    padding: 6px 0 6px 4px !important;
     width: auto !important;
     cursor: pointer;
     border-radius: 6px !important;
@@ -329,7 +347,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 6px 8px 0 8px;
+    padding: 6px 9px 0 9px;
     border-radius: 6px;
     transition: background 0.15s;
     user-select: none;
